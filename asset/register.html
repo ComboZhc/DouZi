@@ -1,0 +1,35 @@
+$var title:说说-注册
+$var css:register.css
+$var js:
+<div class="container">
+  <form class="form-register" action="/login/" method="post">
+    <h2 class="form-register-heading">注册说说，发现精彩</h2>
+      <div class="form-group">
+        <input type="text" class="form-control" placeholder="用户名" name="username" autofocus>
+      </div>
+      <div class="form-group">
+        <input type="password" class="form-control" placeholder="密码" name="password">
+      </div>
+      <div class="form-group">
+        <input type="password" class="form-control" placeholder="确认密码" name="password2">
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-control" placeholder="邮箱" name="email">
+      </div>
+      <div class="form-group">
+        <label class="radio-inline">
+          <input type="radio" value="m" name="gender">男
+        </label>
+        <label class="radio-inline">
+          <input type="radio" value="f" name="gender">女
+        </label>
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-control" placeholder="城市" name="location">
+      </div>
+      <div class="form-group">
+        <textarea type="text" class="form-control" name="description" placeholder="你的签名"></textarea>
+      </div>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">注册</button>
+  </form>
+</div>

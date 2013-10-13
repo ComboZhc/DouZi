@@ -1,12 +1,15 @@
-<!DOCTYPE html>
-<html>
-    <head>
-    </head>
-    <body>
-        <form name="input" action="/login/" method="post">
-            Username <input type="text" name="username" />
-            Password <input type="password" name="password" />
-            <input type="submit" value="Login" />
-        </form>
-    </body>
-</html>
+$var title:说说-登入
+$var css:login.css
+$var js:
+<div class="container">
+  <form class="form-signin" action="/login/" method="post">
+    <h2 class="form-signin-heading">登入说说，发现精彩</h2>
+    <input type="text" class="form-control" placeholder="用户名" name="username" autofocus>
+    <input type="password" class="form-control" placeholder="密码" name="password">
+    $if flash():
+      <div class="alert alert-danger">
+      $:flash(True)
+      </div>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">登入</button>
+  </form>
+</div>
