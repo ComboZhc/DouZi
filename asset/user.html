@@ -10,13 +10,17 @@ $var js:
         <h4 id="prompt" class="pull-right text-muted">欢迎回来, $session.username<a role="button" class="btn btn-primary" href="/logout/">登出</a></h4>
     </div>
     <ul class="nav nav-justified">
-      <li><a href="/">话题广场</a></li>
-      <li><a href="#">我的话题</a></li>
-      <li><a href="#">新的话题</a></li>
-      <li class="active"><a href="#">用户</a></li>
+      <li><a href="/">话题列表</a></li>
+      <li><a href="/">用户列表</a></li>
+      <li><a href="/">新的话题</a></li>
+      <li><a href="/">我的话题</a></li>
+      $if session.user:
+         <li class="active"><a href="/users/$(session.user.user_id)/">我的资料</a></li>
+      $else:
+         <li class="active"><a href="/">我的资料</a></li>
     </ul>
   </div>
-  <div class="container-my">
+  <div class="container-my clearfix">
     <div class="pull-left list-group subcontainer-my">
       <div href="#" class="list-group-item active">$user.username
         $if user.gender == 'm':
@@ -39,5 +43,11 @@ $var js:
           <img class="pull-right" src="/static/img/quote_1.png"/>
         </div>
     </div>
+  </div>
+  <div class="container-alert clearfix">
+    $if flash():
+      <div class="alert alert-warning">
+      $:flash(True)
+      </div>
   </div>
 </div>

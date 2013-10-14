@@ -3,6 +3,11 @@
   padding: 15px;
   margin: 0 auto;
 }
+.container-alert {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
 .subcontainer-my {
   max-width: 330px;
 }

@@ -75,7 +75,8 @@ class Reg:
         return render.register()
     def POST(self):
         i = web.input()
-        r, j = client.post('/users/')
+        i.is_public = int(bool(i.is_public))
+        r, j = client.post('/users/', data=i)
         if r == codes.created:
             flash(_.reg.ok)
             raise web.redirect('/login/')
@@ -88,7 +89,7 @@ class User:
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.get('/users/%i/' % int(id))
         if r == codes.ok:
-            return render.user_edit(user=j)
+            return render.user(user=j)
         else:
             return web.notfound()
 
@@ -102,7 +103,8 @@ class UserEdit:
             return web.notfound()
     def POST(self, id):
         i = web.input()
-        r, j = client.put('/users/%i/' % int(id))
+        i.is_public = int('is_public' in i)
+        r, j = client.put('/users/%i/' % int(id), data=i)
         if r == codes.accepted:
             flash(_.user.edit.ok)
             raise web.redirect('/users/%i/' % int(id))
