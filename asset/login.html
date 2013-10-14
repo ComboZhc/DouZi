@@ -7,7 +7,7 @@ $var js:
     <input type="text" class="form-control" placeholder="用户名" name="username" autofocus>
     <input type="password" class="form-control" placeholder="密码" name="password">
     $if flash():
-      <div class="alert alert-danger">
+      <div class="alert alert-warning">
       $:flash(True)
       </div>
     <button class="btn btn-lg btn-primary btn-block" type="submit">登入</button>

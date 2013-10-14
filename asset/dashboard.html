@@ -12,7 +12,12 @@ $var js:
       <li class="active"><a href="#">话题广场</a></li>
       <li><a href="#">我的话题</a></li>
       <li><a href="#">新的话题</a></li>
-      <li><a href="/my/">个人资料</a></li>
+      <li><a href="
+      $if session.user:
+        /users/$(session.user.user_id)/
+      $else:
+        #
+      ">个人资料</a></li>
     </ul>
   </div>
   <!-- Jumbotron -->

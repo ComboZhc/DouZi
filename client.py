@@ -1,6 +1,7 @@
 import requests
 import web
 import mocks
+import json
 mock = True
 
 def get(url, **kwargs):
@@ -24,25 +25,25 @@ def head(url, **kwargs):
         r = requests.head(url, **kwargs);
         return r.status_code, web.storify(r.json())
 
-def post(url, data=None, **kwargs):
+def post(url, data={}, **kwargs):
     if mock:
-        return mocks.post(url, data=data, **kwargs)
+        return mocks.post(url, data=json.dumps(data), **kwargs)
     else:
-        r = requests.post(url, data=data, **kwargs);
+        r = requests.post(url, data=json.dumps(data), **kwargs);
         return r.status_code, web.storify(r.json())
 
-def put(url, data=None, **kwargs):
+def put(url, data={}, **kwargs):
     if mock:
-        return mocks.put(url, data=data, **kwargs)
+        return mocks.put(url, data=json.dumps(data), **kwargs)
     else:
-        r = requests.put(url, data=data, **kwargs);
+        r = requests.put(url, data=json.dumps(data), **kwargs);
         return r.status_code, web.storify(r.json())
 
-def patch(url, data=None, **kwargs):
+def patch(url, data={}, **kwargs):
     if mock:
-        return mocks.patch(url, data=data, **kwargs)
+        return mocks.patch(url, data=json.dumps(data), **kwargs)
     else:
-        r = requests.patch(url, data=data, **kwargs);
+        r = requests.patch(url, data=json.dumps(data), **kwargs);
         return r.status_code, web.storify(r.json())
 
 def delete(url, **kwargs):

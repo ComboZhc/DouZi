@@ -1,6 +1,6 @@
 $def with (user)
-$var title:说说-个人资料
-$var css:my.css
+$var title:说说-查看用户
+$var css:user.css
 $var js:
 <div class="container">
   <div class="header">
@@ -13,7 +13,7 @@ $var js:
       <li><a href="/">话题广场</a></li>
       <li><a href="#">我的话题</a></li>
       <li><a href="#">新的话题</a></li>
-      <li class="active"><a href="#">个人资料</a></li>
+      <li class="active"><a href="#">用户</a></li>
     </ul>
   </div>
   <div class="container-my">
@@ -23,7 +23,8 @@ $var js:
           <img width="16" src='/static/img/male.png'/>
         $else:
           <img width="16" src='/static/img/female.png'/>
-        <a href="#" class="btn-sm btn-info" role="button">编辑</a>
+        $if session.user.is_admin or session.user.user_id == user.user_id:
+          <a href="/users/$(user.user_id)/edit/" class="btn-sm btn-info" role="button">编辑</a>
       </div>
       <div href="#" class="list-group-item">$user.email</div>
       <div href="#" class="list-group-item">$user.phone</div>

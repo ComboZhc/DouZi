@@ -4,12 +4,12 @@ from requests import codes
 import _
 
 urls = (
-    '/?', 'Home',
-    '/login/?', 'Login',
-    '/logout/?', 'Logout',
-    '/reg/?', 'Reg',
-    '/my/?', 'My',
-    '/my/edit/?', 'My.Edit',
+    r'/?', 'Home',
+    r'/login/?', 'Login',
+    r'/logout/?', 'Logout',
+    r'/reg/?', 'Reg',
+    r'/users/(\d+)/?', 'User',
+    r'/users/(\d+)/edit/?', 'UserEdit',
 )
 app = web.application(urls, globals())
 
@@ -74,13 +74,36 @@ class Reg:
         render = web.template.render('asset', base='before.common', globals=globals())
         return render.register()
     def POST(self):
-        raise web.redirect('/login/')
+        i = web.input()
+        r, j = client.post('/users/')
+        if r == codes.created:
+            flash(_.reg.ok)
+            raise web.redirect('/login/')
+        else:
+            flash(_.reg.fail)
+            raise web.redirect('/reg/')
 
-class My:
-    def GET(self):
+class User:
+    def GET(self, id):
         render = web.template.render('asset', base='after.common', globals=globals())
-        r, j = client.post('/user/%i/' % session.user.userid)
-        return render.my(user=j)
+        r, j = client.get('/users/%i/' % int(id))
+        return render.user(user=j)
+
+class UserEdit:
+    def GET(self, id):
+        render = web.template.render('asset', base='after.common', globals=globals())
+        r, j = client.get('/users/%i/' % int(id))
+        return render.user_edit(user=j)
+    def POST(self, id):
+        i = web.input()
+        r, j = client.put('/users/%i/' % int(id))
+        if r == codes.accepted:
+            flash(_.user.edit.ok)
+            raise web.redirect('/users/%i/' % int(id))
+        else:
+            flash(_.user.edit.fail)
+            raise web.redirect('/users/%i/edit/' % int(id))
+
 
 if __name__ == "__main__":
     app.run()

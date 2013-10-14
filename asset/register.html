@@ -2,7 +2,7 @@ $var title:说说-注册
 $var css:register.css
 $var js:
 <div class="container">
-  <form class="form-register" action="/login/" method="post">
+  <form class="form-register" action="/reg/" method="post">
     <h2 class="form-register-heading">注册说说，发现精彩</h2>
       <div class="form-group">
         <input type="text" class="form-control" placeholder="用户名" name="username" autofocus>
@@ -30,6 +30,10 @@ $var js:
       <div class="form-group">
         <textarea type="text" class="form-control" name="description" placeholder="你的签名"></textarea>
       </div>
+      $if flash():
+        <div class="alert alert-warning">
+        $:flash(True)
+        </div>
       <button class="btn btn-lg btn-primary btn-block" type="submit">注册</button>
   </form>
 </div>
