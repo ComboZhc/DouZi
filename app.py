@@ -87,13 +87,19 @@ class User:
     def GET(self, id):
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.get('/users/%i/' % int(id))
-        return render.user(user=j)
+        if r == codes.ok:
+            return render.user_edit(user=j)
+        else:
+            return web.notfound()
 
 class UserEdit:
     def GET(self, id):
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.get('/users/%i/' % int(id))
-        return render.user_edit(user=j)
+        if r == codes.ok:
+            return render.user_edit(user=j)
+        else:
+            return web.notfound()
     def POST(self, id):
         i = web.input()
         r, j = client.put('/users/%i/' % int(id))
