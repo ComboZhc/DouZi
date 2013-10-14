@@ -12,12 +12,14 @@ $var js:
     <ul class="nav nav-justified">
       <li class="active"><a href="/">话题列表</a></li>
       <li><a href="/">用户列表</a></li>
-      <li><a href="/">新的话题</a></li>
-      <li><a href="/">我的话题</a></li>
       $if session.user:
-         <li><a href="/users/$(session.user.user_id)/">我的资料</a></li>
+        <li><a href="/topics/new/">新的话题</a></li>
+        <li><a href="/">我的话题</a></li>
+        <li><a href="/users/$(session.user.user_id)/">我的资料</a></li>
       $else:
-         <li><a href="/">我的资料</a></li>
+        <li><a href="/">新的话题</a></li>
+        <li><a href="/">我的话题</a></li>
+        <li><a href="/">我的资料</a></li>
     </ul>
   </div>
   <!-- Jumbotron -->
@@ -34,7 +36,7 @@ $var js:
 		<div class="col-lg-4">
 		<h2>$t.title</h2>
 		<p>$t.content</p>
-		<p><a class="btn btn-primary" href="/topic/$t.topic_id" role="button">View details &raquo;</a></p>
+		<p><a class="btn btn-primary" href="/topics/$t.topic_id/" role="button">进入话题</a></p>
 		</div>
 		$if loop.index % 3 == 0 or loop.last:
 			</div>

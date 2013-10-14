@@ -12,12 +12,14 @@ $var js:
     <ul class="nav nav-justified">
       <li><a href="/">话题列表</a></li>
       <li><a href="/">用户列表</a></li>
-      <li><a href="/">新的话题</a></li>
-      <li><a href="/">我的话题</a></li>
       $if session.user:
-         <li class="active"><a href="/users/$(session.user.user_id)/">我的资料</a></li>
+        <li><a href="/topics/new/">新的话题</a></li>
+        <li><a href="/">我的话题</a></li>
+        <li class="active"><a href="/users/$(session.user.user_id)/">我的资料</a></li>
       $else:
-         <li class="active"><a href="/">我的资料</a></li>
+        <li><a href="/">新的话题</a></li>
+        <li><a href="/">我的话题</a></li>
+        <li class="active"><a href="/">我的资料</a></li>
     </ul>
   </div>
   <div class="container-my clearfix">

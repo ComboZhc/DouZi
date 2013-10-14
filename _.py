@@ -10,3 +10,8 @@ class user:
     class edit:
         ok = u'修改成功'
         fail = u'修改信息错误'
+
+class topic:
+    class new:
+        ok = u'发布话题成功'
+        fail = u'发布话题失败'

@@ -2,6 +2,7 @@ import web
 import client
 from requests import codes
 import _
+import os
 
 urls = (
     r'/?', 'TopicList',
@@ -10,6 +11,7 @@ urls = (
     r'/reg/?', 'Reg',
     r'/users/(\d+)/?', 'User',
     r'/users/(\d+)/edit/?', 'UserEdit',
+    r'/topics/new/?', 'TopicNew',
 )
 app = web.application(urls, globals())
 
@@ -39,6 +41,10 @@ def flash(message=None):
         return message
     else:
         return session.message
+
+def image_path(filename):
+    return os.path.join('static', 'images', filename)
+
 
 class Home:
     def GET(self):
@@ -120,6 +126,26 @@ class TopicList:
             return render.dashboard(dashboard=j)
         else:
             return web.notfound()
+
+class TopicNew:
+    def GET(self):
+        render = web.template.render('asset', base='after.common', globals=globals())
+        return render.topic_new()
+    def POST(self):
+        i = web.input(image={})
+        i.is_public = int('is_public' in i)
+        i.image_id = os.urandom(16).encode('hex')
+        f = open(image_path('%s%s' % (i.image_id, os.path.splitext(i.image.filename)[1])), 'w')
+        f.write(i.image.file.read())
+        f.close()
+        del i.image
+        r, j = client.post('/topics/', data=i)
+        if r == codes.created:
+            flash(_.topic.new.ok)
+            raise web.redirect('/topics/%i/' % j.topic_id)
+        else:
+            flash(_.topic.new.fail)
+            return web.redirect('/topics/new')
 
 if __name__ == "__main__":
     app.run()
