@@ -18,6 +18,40 @@ def get(url, **kwargs):
                 'is_admin':0,
                 'is_public':1, 
             })
+    elif url == "/topics/":
+        return (codes.ok, [
+            storify({
+            'topic_id':1,
+            'user_id':1,
+            'image_id':1,
+            'title':'吃西瓜',
+            'content':'吃吃拆此航次吃',
+            'is_public':1
+            }),
+            storify({
+            'topic_id':2,
+            'user_id':1,
+            'image_id':2,
+            'title':'还有比奶子更丧的么',
+            'content':'RT',
+            'is_public':1
+            }),
+            storify({
+            'topic_id':3,
+            'user_id':1,
+            'image_id':3,
+            'title':'sbPJ撸个蛋啊',
+            'content':'sb滚粗',
+            'is_public':1
+            }),
+            storify({
+            'topic_id':4,
+            'user_id':1,
+            'image_id':4,
+            'title':'垃圾游戏，怒删',
+            'content':'天凤就是个垃圾游戏，不服来辩',
+            'is_public':1
+            })])
     return 0, None
 
 def post(url, data={}, **kwargs):
@@ -37,7 +71,6 @@ def post(url, data={}, **kwargs):
         return codes.created, storify({
                 'user_id':1,
             })
-
     return 0, None
 
 def put(url, data={}, **kwargs):

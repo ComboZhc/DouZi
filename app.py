@@ -4,7 +4,7 @@ from requests import codes
 import _
 
 urls = (
-    r'/?', 'Home',
+    r'/?', 'TopicList',
     r'/login/?', 'Login',
     r'/logout/?', 'Logout',
     r'/reg/?', 'Reg',
@@ -112,6 +112,14 @@ class UserEdit:
             flash(_.user.edit.fail)
             raise web.redirect('/users/%i/edit/' % int(id))
 
+class TopicList:
+    def GET(self):
+        render = web.template.render('asset', base='after.common', globals=globals())
+        r, j = client.get('/topics/')
+        if r == codes.ok:
+            return render.dashboard(dashboard=j)
+        else:
+            return web.notfound()
 
 if __name__ == "__main__":
     app.run()
