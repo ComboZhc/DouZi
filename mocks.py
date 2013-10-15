@@ -55,6 +55,66 @@ def get(url, **kwargs):
                 'content':u'天凤就是个垃圾游戏，不服来辩',
                 'is_public':1,
             }])
+    elif url == "/users/":
+        return codes.ok, s(
+            [{
+                'username':'sb',
+                'user_id':2,
+                'email':'papapa@fudan.edu.cn',
+                'gender':'m',
+                'phone':'123431423',
+                'location':'大张江',
+                'is_vip':0,
+                'is_banned':0,
+                'is_admin':0,
+                'is_public':1
+            },
+            {
+                'username':'马奶子',
+                'user_id':3,
+                'email':'sb@fudan.edu.cn',
+                'gender':'f',
+                'phone':'123431423',
+                'location':'公共厕所',
+                'is_vip':0,
+                'is_banned':1,
+                'is_admin':0,
+                'is_public':1
+            },
+            {
+                'username':'克长',
+                'user_id':4,
+                'email':'bbbb@fudan.edu.cn',
+                'gender':'m',
+                'phone':'123431423',
+                'location':'美帝',
+                'is_vip':1,
+                'is_banned':0,
+                'is_admin':0,
+                'is_public':1
+            },
+            {
+                'username':'陈叔叔',
+                'user_id':5,
+                'email':'doubi@fudan.edu.cn',
+                'gender':'m',
+                'phone':'123431423',
+                'location':'dota',
+                'is_vip':0,
+                'is_banned':0,
+                'is_admin':0,
+                'is_public':1
+            }
+            ])
+    elif url == "/topics/1/" or url == "/topics/2/" or url == "/topics/3/" or url == "/topics/4/":
+        return codes.ok, s({
+                'topic_id':1,
+                'user_id':1,
+                'image_id':'1.jpg',
+                'title':u'吃西瓜',
+                'content':u'吃吃拆此航次吃',
+                'is_public':1
+        })
     return 0, None
 
 def post(url, data={}, **kwargs):

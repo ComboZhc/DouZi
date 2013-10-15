@@ -19,6 +19,27 @@ $def with (content)
         <link rel="javascript" type="text/javascript" href="/static/js/$f"/>
   </head>
   <body>
+<div class="container">
+  <div class="header">
+    <div class="clearfix masthead">
+      <img id="logo" class="pull-left" src="/static/img/logo.png"/>
+      $if session.user:
+        <h4 id="prompt" class="pull-right text-muted">欢迎回来, $session.username<a role="button" class="btn btn-primary" href="/logout/">登出</a></h4>
+    </div>
+    <ul class="nav nav-justified">
+      <li $:('class="active"' if content.active=='1' else '')><a href="/">话题列表</a></li>
+      <li $:('class="active"' if content.active=='2' else '')><a href="/users/">用户列表</a></li>
+      $if session.user:
+        <li $:('class="active"' if content.active=='3' else '')><a href="/topics/new/">新的话题</a></li>
+        <li $:('class="active"' if content.active=='4' else '')><a href="/topics/my/">我的话题</a></li>
+        <li $:('class="active"' if content.active=='5' else '')><a href="/users/$(session.user.user_id)/">我的资料</a></li>
+      $else:
+        <li $:('class="active"' if content.active=='6' else '')><a href="/">新的话题</a></li>
+        <li $:('class="active"' if content.active=='7' else '')><a href="/">我的话题</a></li>
+        <li $:('class="active"' if content.active=='8' else '')><a href="/">我的资料</a></li>
+    </ul>
+  </div>
     $:content
+</div>
   </body>
 </html>

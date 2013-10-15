@@ -1,27 +1,8 @@
 $def with (user)
 $var title:说说-修改用户信息
+$var active:5
 $var css:user.css
 $var js:
-<div class="container">
-  <div class="header">
-    <div class="clearfix masthead">
-      <img id="logo" class="pull-left" src="/static/img/logo.png"/>
-      $if session.user:
-        <h4 id="prompt" class="pull-right text-muted">欢迎回来, $session.username<a role="button" class="btn btn-primary" href="/logout/">登出</a></h4>
-    </div>
-    <ul class="nav nav-justified">
-      <li><a href="/">话题列表</a></li>
-      <li><a href="/">用户列表</a></li>
-      $if session.user:
-        <li><a href="/topics/new/">新的话题</a></li>
-        <li><a href="/">我的话题</a></li>
-        <li class="active"><a href="/users/$(session.user.user_id)/">我的资料</a></li>
-      $else:
-        <li><a href="/">新的话题</a></li>
-        <li><a href="/">我的话题</a></li>
-        <li class="active"><a href="/">我的资料</a></li>
-    </ul>
-  </div>
   <form class="form-user-edit" action="/users/$(user.user_id)/edit/" method="post">
     <div class="form-group">
       <input type="text" class="form-control" placeholder="用户名" name="username" autofocus value="$(user.username)">
@@ -72,4 +53,3 @@ $var js:
       </div>
     <button class="btn btn-lg btn-primary btn-block" type="submit">更改</button>
   </form>
-</div>
