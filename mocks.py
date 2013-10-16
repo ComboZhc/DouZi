@@ -139,5 +139,12 @@ def post(url, data={}, **kwargs):
 def put(url, data={}, **kwargs):
     if url == "/users/1/":
         return codes.accepted, s({})
+    elif url == "/topics/1/" or url == "/topics/2/" or url == "/topics/3/" or url == "/topics/4/":
+        return codes.ok, None
+    return 0, None
 
+    
+def delete(url, data={}, **kwargs):
+    if url == "/topics/1/" or url == "/topics/2/" or url == "/topics/3/" or url == "/topics/4/":
+        return codes.ok, None
     return 0, None

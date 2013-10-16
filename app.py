@@ -12,6 +12,8 @@ urls = (
     r'/users/(\d+)/?', 'User',
     r'/users/(\d+)/edit/?', 'UserEdit',
     r'/topics/new/?', 'TopicNew',
+    r'/topics/(\d+)/edit/?', 'TopicEdit',
+    r'/topics/(\d+)/delete/?', 'TopicDelete',
     r'/topics/','TopicList',
     r'/topics/(\d+)/','Topic',
     r'/topics/my/','MyTopics',
@@ -177,6 +179,40 @@ class Topic:
             return render.topics_detail(topic=j)
         else:
             return web.notfound()
-        
+            
+class TopicEdit:
+    def GET(self, id):
+        render = web.template.render('asset', base='after.common', globals=globals())
+        r, j = client.get('/topics/%i/' % int(id))
+        if r == codes.ok:
+            return render.topics_edit(topic=j)
+        else:
+            return web.notfound()
+    
+    def POST(self, id):
+        i = web.input(image={})
+        i.is_public = int('is_public' in i)
+        i.image_id = os.urandom(16).encode('hex') + os.path.splitext(i.image.filename)[1];
+        f = open(image_path(i.image_id), 'w')
+        f.write(i.image.file.read())
+        f.close()
+        del i.image
+        r, j = client.put('/topics/%i/' % id, data=i)
+        if r == codes.created:
+            flash(_.topic.new.ok)
+            raise web.redirect('/topics/%i/' % j.topic_id)
+        else:
+            flash(_.topic.new.fail)
+            return web.redirect('/topics/new')
+    
+class TopicDelete:
+    def GET(self, id):
+        render = web.template.render('asset', base='after.common', globals=globals())
+        r, j = client.delete('/topics/%i/' % int(id))
+        if r == codes.ok:
+            raise web.redirect('/topics/');
+        else:
+            return web.notfound()
+            
 if __name__ == "__main__":
     app.run()
