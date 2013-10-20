@@ -15,9 +15,13 @@ $var js:
 		$if loop.index % 4 == 1:
 			<div class="row">
 		<div class="col-lg-3">
-		<h2>$t.title</h2>
-		<p>$t.content</p>
-		<p><a class="btn btn-primary" href="/topics/$t.topic_id/" role="button">进入话题</a></p>
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h3 class="panel-title"><a href="/topics/$t.topic_id/">$t.title</a></h3>
+			</div>
+		
+			<div class="panel-body">$t.content</div>
+		</div>
 		</div>
 		$if loop.index % 4 == 0 or loop.last:
 			</div>

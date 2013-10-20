@@ -90,3 +90,11 @@ body {
 img#logo {
 	width: 64px;
 }
+
+.header {
+	margin-bottom:10px;
+}
+
+.topic-pic {
+	max-height:260px;
+}
