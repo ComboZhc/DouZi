@@ -5,6 +5,7 @@ class login:
 class reg:
     fail = u'注册信息错误'
     ok = u'注册成功'
+    password_mismatch = u'密码不一致'
 
 class user:
     class edit:

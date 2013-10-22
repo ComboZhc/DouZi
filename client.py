@@ -4,7 +4,13 @@ import mocks
 import json
 from simplejson import JSONDecodeError
 mock = False
-base = 'http://localhost:8081'
+base = 'http://lixiao.3owl.com'
+
+def s(mapping):
+    if isinstance(mapping, dict):
+        return web.storify(mapping)
+    if isinstance(mapping, list):
+        return [web.storify(x) for x in mapping]
 
 def get(url, **kwargs):
     if mock:
@@ -12,9 +18,9 @@ def get(url, **kwargs):
     else:
         r = requests.get(base + url, **kwargs)
         try:
-            return r.status_code, web.storify(r.json())
+            return r.status_code, s(r.json())
         except JSONDecodeError:
-            return r.status_code, {}
+            return r.status_code, s({})
 
 def options(url, **kwargs):
     if mock:
@@ -22,9 +28,9 @@ def options(url, **kwargs):
     else:
         r = requests.options(base + url, **kwargs)
         try:
-            return r.status_code, web.storify(r.json())
+            return r.status_code, s(r.json())
         except JSONDecodeError:
-            return r.status_code, {}
+            return r.status_code, s({})
 
 def head(url, **kwargs):
     if mock:
@@ -32,19 +38,20 @@ def head(url, **kwargs):
     else:
         r = requests.head(base + url, **kwargs)
         try:
-            return r.status_code, web.storify(r.json())
+            return r.status_code, s(r.json())
         except JSONDecodeError:
-            return r.status_code, {}
+            return r.status_code, s({})
 
 def post(url, data={}, **kwargs):
+    print json.dumps(data)
     if mock:
         return mocks.post(url, data=json.dumps(data), **kwargs)
     else:
         r = requests.post(base + url, data=json.dumps(data), **kwargs)
         try:
-            return r.status_code, web.storify(r.json())
+            return r.status_code, s(r.json())
         except JSONDecodeError:
-            return r.status_code, {}
+            return r.status_code, s({})
 
 def put(url, data={}, **kwargs):
     if mock:
@@ -52,9 +59,9 @@ def put(url, data={}, **kwargs):
     else:
         r = requests.put(base + url, data=json.dumps(data), **kwargs)
         try:
-            return r.status_code, web.storify(r.json())
+            return r.status_code, s(r.json())
         except JSONDecodeError:
-            return r.status_code, {}
+            return r.status_code, s({})
 
 def patch(url, data={}, **kwargs):
     if mock:
@@ -62,9 +69,9 @@ def patch(url, data={}, **kwargs):
     else:
         r = requests.patch(base + url, data=json.dumps(data), **kwargs)
         try:
-            return r.status_code, web.storify(r.json())
+            return r.status_code, s(r.json())
         except JSONDecodeError:
-            return r.status_code, {}
+            return r.status_code, s({})
 
 def delete(url, **kwargs):
     if mock:
@@ -72,6 +79,6 @@ def delete(url, **kwargs):
     else:
         r = requests.delete(base + url, **kwargs)
         try:
-            return r.status_code, web.storify(r.json())
+            return r.status_code, s(r.json())
         except JSONDecodeError:
-            return r.status_code, {}
+            return r.status_code, s({})

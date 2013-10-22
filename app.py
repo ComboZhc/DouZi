@@ -90,7 +90,13 @@ class Reg:
         return render.register()
     def POST(self):
         i = web.input()
-        i.is_public = int(bool(i.is_public))
+        if i.password2 != i.password:
+            flash(_.reg.password_mismatch)
+            raise web.redirect('/reg/')
+        i.is_public = int('is_public' in i)
+        i.is_admin = 0
+        i.is_vip = 0
+        del i.password2
         r, j = client.post('/users/', data=i)
         if r == codes.created:
             flash(_.reg.ok)
