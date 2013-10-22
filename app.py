@@ -201,7 +201,7 @@ class TopicEdit:
         i.user_id = session.user.user_id
         i.is_public = int('is_public' in i)
         i.image_id = os.urandom(16).encode('hex') + os.path.splitext(i.image.filename)[1];
-        f = open(image_path(i.image_id), 'w')
+        f = open(image_path(i.image_id), 'wb')
         f.write(i.image.file.read())
         f.close()
         del i.image
