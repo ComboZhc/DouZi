@@ -16,3 +16,6 @@ class topic:
     class new:
         ok = u'发布话题成功'
         fail = u'发布话题失败'
+    class edit:
+        ok = u'修改话题成功'
+        fail = u'修改话题失败'
