@@ -49,7 +49,7 @@ def flash(message=None):
         return session.message
 
 def image_path(filename):
-    return os.path.join('static', 'images', filename)
+    return os.path.join('static', 'image', filename)
 
 
 class Home:
@@ -91,6 +91,8 @@ class Reg:
     def POST(self):
         i = web.input()
         i.is_public = int(bool(i.is_public))
+        i.is_admin = 0;
+        i.is_vip = 0;
         r, j = client.post('/users/', data=i)
         if r == codes.created:
             flash(_.reg.ok)
@@ -142,6 +144,7 @@ class TopicNew:
         return render.topic_new()
     def POST(self):
         i = web.input(image={})
+        i.user_id = session.user.user_id
         i.is_public = int('is_public' in i)
         i.image_id = os.urandom(16).encode('hex') + os.path.splitext(i.image.filename)[1];
         f = open(image_path(i.image_id), 'w')
@@ -149,7 +152,7 @@ class TopicNew:
         f.close()
         del i.image
         r, j = client.post('/topics/', data=i)
-        if r == codes.created:
+        if r == codes.ok:
             flash(_.topic.new.ok)
             raise web.redirect('/topics/%i/' % j.topic_id)
         else:
@@ -165,7 +168,7 @@ class UserList:
 class MyTopics:
     def GET(self):
         render = web.template.render('asset', base='after.common', globals=globals())
-        r, j = client.get('/topics/',user_id=session.user.user_id)
+        r, j = client.get('/topics/')#,user_id=session.user.user_id)
         if r == codes.ok:
             return render.topics_my(dashboard=j)
         else:
@@ -191,6 +194,7 @@ class TopicEdit:
     
     def POST(self, id):
         i = web.input(image={})
+        i.user_id = session.user.user_id
         i.is_public = int('is_public' in i)
         i.image_id = os.urandom(16).encode('hex') + os.path.splitext(i.image.filename)[1];
         f = open(image_path(i.image_id), 'w')
