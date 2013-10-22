@@ -20,7 +20,7 @@ def get(url, **kwargs):
         try:
             return r.status_code, s(r.json())
         except JSONDecodeError:
-            return r.status_code, {}
+            return r.status_code, s({})
 
 def options(url, **kwargs):
     if mock:
@@ -30,7 +30,7 @@ def options(url, **kwargs):
         try:
             return r.status_code, s(r.json())
         except JSONDecodeError:
-            return r.status_code, {}
+            return r.status_code, s({})
 
 def head(url, **kwargs):
     if mock:
@@ -40,7 +40,7 @@ def head(url, **kwargs):
         try:
             return r.status_code, s(r.json())
         except JSONDecodeError:
-            return r.status_code, {}
+            return r.status_code, s({})
 
 def post(url, data={}, **kwargs):
     if mock:
@@ -50,7 +50,7 @@ def post(url, data={}, **kwargs):
         try:
             return r.status_code, s(r.json())
         except JSONDecodeError:
-            return r.status_code, {}
+            return r.status_code, s({})
 
 def put(url, data={}, **kwargs):
     if mock:
@@ -60,7 +60,7 @@ def put(url, data={}, **kwargs):
         try:
             return r.status_code, s(r.json())
         except JSONDecodeError:
-            return r.status_code, {}
+            return r.status_code, s({})
 
 def patch(url, data={}, **kwargs):
     if mock:
@@ -70,7 +70,7 @@ def patch(url, data={}, **kwargs):
         try:
             return r.status_code, s(r.json())
         except JSONDecodeError:
-            return r.status_code, {}
+            return r.status_code, s({})
 
 def delete(url, **kwargs):
     if mock:
@@ -80,4 +80,4 @@ def delete(url, **kwargs):
         try:
             return r.status_code, s(r.json())
         except JSONDecodeError:
-            return r.status_code, {}
+            return r.status_code, s({})

@@ -1,13 +1,7 @@
 #coding: utf-8
-from web import storify
 import json
 from requests import codes
-
-def s(mapping):
-    if isinstance(mapping, dict):
-        return storify(mapping)
-    if isinstance(mapping, list):
-        return [storify(x) for x in mapping]
+from client import s
 
 def get(url, **kwargs):
     if url == "/users/1/":
