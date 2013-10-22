@@ -4,7 +4,7 @@ import mocks
 import json
 from simplejson import JSONDecodeError
 mock = False
-base = 'http://lixiao.3owl.com'
+base = 'http://lixiao.3owl.com/'
 
 def s(mapping):
     if isinstance(mapping, dict):

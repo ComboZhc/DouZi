@@ -51,55 +51,7 @@ def get(url, **kwargs):
             }])
     elif url == "/users/":
         return codes.ok, s(
-            [{
-                'username':'sb',
-                'user_id':2,
-                'email':'papapa@fudan.edu.cn',
-                'gender':'m',
-                'phone':'123431423',
-                'location':'大张江',
-                'is_vip':0,
-                'is_banned':0,
-                'is_admin':0,
-                'is_public':1
-            },
-            {
-                'username':'马奶子',
-                'user_id':3,
-                'email':'sb@fudan.edu.cn',
-                'gender':'f',
-                'phone':'123431423',
-                'location':'公共厕所',
-                'is_vip':0,
-                'is_banned':1,
-                'is_admin':0,
-                'is_public':1
-            },
-            {
-                'username':'克长',
-                'user_id':4,
-                'email':'bbbb@fudan.edu.cn',
-                'gender':'m',
-                'phone':'123431423',
-                'location':'美帝',
-                'is_vip':1,
-                'is_banned':0,
-                'is_admin':0,
-                'is_public':1
-            },
-            {
-                'username':'陈叔叔',
-                'user_id':5,
-                'email':'doubi@fudan.edu.cn',
-                'gender':'m',
-                'phone':'123431423',
-                'location':'dota',
-                'is_vip':0,
-                'is_banned':0,
-                'is_admin':0,
-                'is_public':1
-            }
-            ])
+[{"username":"admin","user_id":"1","email":"admin@localhost","gender":"m","phone":"1234567890","location":"localhost","is_vip":"1","is_banned":"0","is_admin":"1","is_public":"0"},{"username":"xiaoli","user_id":"5","email":"xiaoli@localhost","gender":"m","phone":"12345","location":"bfgd","is_vip":"1","is_banned":"0","is_admin":"1","is_public":"1"},{"username":"lilixiao","user_id":"6","email":"lixiao@localhost","gender":"m","phone":"124539996","location":"localhost","is_vip":"1","is_banned":"0","is_admin":"1","is_public":"1"},{"username":"lixiao","user_id":"7","email":"lixiao@localhost","gender":"m","phone":"12453","location":"localhost","is_vip":"1","is_banned":"0","is_admin":"1","is_public":"1"},{"username":"lixiao","user_id":"8","email":"lixiao@localhost","gender":"m","phone":"12453","location":"localhost","is_vip":"1","is_banned":"0","is_admin":"1","is_public":"1"},{"username":"lixiao","user_id":"9","email":"lixiao@localhost","gender":"m","phone":"12453","location":"localhost","is_vip":"1","is_banned":"0","is_admin":"1","is_public":"1"}])
     elif url == "/topics/1/" or url == "/topics/2/" or url == "/topics/3/" or url == "/topics/4/":
         return codes.ok, s({
                 'topic_id':1,
