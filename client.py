@@ -43,7 +43,6 @@ def head(url, **kwargs):
             return r.status_code, s({})
 
 def post(url, data={}, **kwargs):
-    print json.dumps(data)
     if mock:
         return mocks.post(url, data=json.dumps(data), **kwargs)
     else:
