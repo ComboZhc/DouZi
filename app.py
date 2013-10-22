@@ -172,7 +172,7 @@ class UserList:
 class MyTopics:
     def GET(self):
         render = web.template.render('asset', base='after.common', globals=globals())
-        r, j = client.get('/topics/')#,user_id=session.user.user_id)
+        r, j = client.get('/users/%i/topics/' % int(session.user.user_id))
         if r == codes.ok:
             return render.topics_my(dashboard=j)
         else:
@@ -206,7 +206,7 @@ class TopicEdit:
         f.close()
         del i.image
         r, j = client.put('/topics/%i/' % int(id), data=i)
-        if r == codes.created:
+        if r == codes.accepted:
             flash(_.topic.edit.ok)
             raise web.redirect('/topics/%i/' % int(id))
         else:
