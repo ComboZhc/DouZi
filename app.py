@@ -201,13 +201,13 @@ class TopicEdit:
         f.write(i.image.file.read())
         f.close()
         del i.image
-        r, j = client.put('/topics/%i/' % id, data=i)
-        if r == codes.created:
-            flash(_.topic.new.ok)
-            raise web.redirect('/topics/%i/' % j.topic_id)
+        r, j = client.put('/topics/%i/' % int(id), data=i)
+        if r == codes.accepted:
+            flash(_.topic.edit.ok)
+            raise web.redirect('/topics/%i/' % int(id))
         else:
-            flash(_.topic.new.fail)
-            return web.redirect('/topics/new')
+            flash(_.topic.edit.fail)
+            return web.redirect('/topics/%i/edit/' % int(id))
     
 class TopicDelete:
     def GET(self, id):
