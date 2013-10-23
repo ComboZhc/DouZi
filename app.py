@@ -125,8 +125,9 @@ class UserEdit:
     def POST(self, id):
         i = web.input()
         i.is_public = int('is_public' in i)
+        i.is_vip = session.user.is_vip
         r, j = client.put('/users/%i/' % int(id), data=i)
-        if r == codes.accepted:
+        if r == codes.ok:
             flash(_.user.edit.ok)
             raise web.redirect('/users/%i/' % int(id))
         else:
