@@ -11,7 +11,7 @@ def s(mapping):
         
 import mocks
 
-mock = False
+mock = True
 base = 'http://lixiao.3owl.com/'
 
 def get(url, **kwargs):

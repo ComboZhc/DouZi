@@ -18,6 +18,7 @@ urls = (
     r'/topics/(\d+)/','Topic',
     r'/topics/my/','MyTopics',
     r'/users/','UserList',
+    r'/topics/(\d+)/comments/', 'TopicComment',
 )
 app = web.application(urls, globals())
 
@@ -183,8 +184,9 @@ class Topic:
     def GET(self, id):
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.get('/topics/%i/' % int(id))
+        s, i = client.get('/topics/%i/comments/' % int(id))
         if r == codes.ok:
-            return render.topics_detail(topic=j)
+            return render.topics_detail(topic=j,comments=i)
         else:
             return web.notfound()
             
@@ -220,6 +222,14 @@ class TopicDelete:
         r, j = client.delete('/topics/%i/' % int(id))
         if r == codes.ok:
             raise web.redirect('/topics/');
+        else:
+            return web.notfound()
+            
+class TopicComment:
+    def POST(self, id):
+        r, j = client.post('/topics/%i/comments/' % int(id))
+        if r == codes.ok:
+            raise web.redirect('/topics/%i/' % int(id));
         else:
             return web.notfound()
             
