@@ -146,7 +146,7 @@ class TopicList:
 class TopicNew:
     def GET(self):
         render = web.template.render('asset', base='after.common', globals=globals())
-        return render.topic_new()
+        return render.topics_new()
     def POST(self):
         i = web.input(image={})
         i.user_id = session.user.user_id
@@ -162,7 +162,7 @@ class TopicNew:
             raise web.redirect('/topics/%i/' % int(j.topic_id))
         else:
             flash(_.topic.new.fail)
-            return web.redirect('/topics/new')
+            return web.redirect('/topics/new/')
             
 class UserList:
     def GET(self):
