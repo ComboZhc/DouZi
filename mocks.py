@@ -6,15 +6,15 @@ from client import s
 def get(url, **kwargs):
     if url == "/users/1/":
         return codes.ok, s({
-                'username':'ComboZhc',
+                'username':'ComboZhc12',
                 'user_id':1,
                 'email':'zhangchao6865@gmail.com',
                 'gender':'m',
                 'phone':'123456789',
                 'description':u'人固有一死，或重于泰山，或轻于鸿毛',
                 'location':u'上海',
-                'is_vip':0,
-                'is_banned':0,
+                'is_vip':1,
+                'is_banned':1,
                 'is_admin':0,
                 'is_public':1, 
             })
@@ -83,6 +83,13 @@ def get(url, **kwargs):
                     "datetime":"2012/10/13"
                 }
             ])
+    elif url == "/bans/":
+        return codes.ok, s([{"username":"admin","user_id":"1","email":"admin@localhost","gender":"m","phone":"1234567890","location":"localhost","is_vip":"1","is_banned":"0","is_admin":"1","is_public":"0"},{"username":"xiaoli","user_id":"5","email":"xiaoli@localhost","gender":"m","phone":"12345","location":"bfgd","is_vip":"1","is_banned":"0","is_admin":"1","is_public":"1"},{"username":"lilixiao","user_id":"6","email":"lixiao@localhost","gender":"m","phone":"124539996","location":"localhost","is_vip":"1","is_banned":"0","is_admin":"1","is_public":"1"},{"username":"lixiao","user_id":"7","email":"lixiao@localhost","gender":"m","phone":"12453","location":"localhost","is_vip":"1","is_banned":"0","is_admin":"1","is_public":"1"},{"username":"lixiao","user_id":"8","email":"lixiao@localhost","gender":"m","phone":"12453","location":"localhost","is_vip":"1","is_banned":"0","is_admin":"1","is_public":"1"},{"username":"lixiao","user_id":"9","email":"lixiao@localhost","gender":"m","phone":"12453","location":"localhost","is_vip":"1","is_banned":"0","is_admin":"1","is_public":"1"}])
+    elif url == "/vips/":
+        return codes.ok, s([{"username":"admin","user_id":"1","email":"admin@localhost","gender":"m","phone":"1234567890","location":"localhost","is_vip":"1","is_banned":"0","is_admin":"1","is_public":"0"},{"username":"xiaoli","user_id":"5","email":"xiaoli@localhost","gender":"m","phone":"12345","location":"bfgd","is_vip":"1","is_banned":"0","is_admin":"1","is_public":"1"},{"username":"lilixiao","user_id":"6","email":"lixiao@localhost","gender":"m","phone":"124539996","location":"localhost","is_vip":"1","is_banned":"0","is_admin":"1","is_public":"1"},{"username":"lixiao","user_id":"7","email":"lixiao@localhost","gender":"m","phone":"12453","location":"localhost","is_vip":"1","is_banned":"0","is_admin":"1","is_public":"1"},{"username":"lixiao","user_id":"8","email":"lixiao@localhost","gender":"m","phone":"12453","location":"localhost","is_vip":"1","is_banned":"0","is_admin":"1","is_public":"1"},{"username":"lixiao","user_id":"9","email":"lixiao@localhost","gender":"m","phone":"12453","location":"localhost","is_vip":"1","is_banned":"0","is_admin":"1","is_public":"1"}])
+    elif url == "/vips/pending/":
+        return codes.ok, s([{"username":"admin","user_id":"1","email":"admin@localhost","gender":"m","phone":"1234567890","location":"localhost","is_vip":"1","is_banned":"0","is_admin":"1","is_public":"0"},{"username":"xiaoli","user_id":"5","email":"xiaoli@localhost","gender":"m","phone":"12345","location":"bfgd","is_vip":"1","is_banned":"0","is_admin":"1","is_public":"1"},{"username":"lilixiao","user_id":"6","email":"lixiao@localhost","gender":"m","phone":"124539996","location":"localhost","is_vip":"1","is_banned":"0","is_admin":"1","is_public":"1"},{"username":"lixiao","user_id":"7","email":"lixiao@localhost","gender":"m","phone":"12453","location":"localhost","is_vip":"1","is_banned":"0","is_admin":"1","is_public":"1"},{"username":"lixiao","user_id":"8","email":"lixiao@localhost","gender":"m","phone":"12453","location":"localhost","is_vip":"1","is_banned":"0","is_admin":"1","is_public":"1"},{"username":"lixiao","user_id":"9","email":"lixiao@localhost","gender":"m","phone":"12453","location":"localhost","is_vip":"1","is_banned":"0","is_admin":"1","is_public":"1"}])
+    
     return 0, None
 
 def post(url, data={}, **kwargs):
@@ -93,7 +100,7 @@ def post(url, data={}, **kwargs):
                 'user_id':1,
                 'is_vip':0,
                 'is_banned':0,
-                'is_admin':0,
+                'is_admin':1,
                 'is_public':1, 
             })
         else:
@@ -103,6 +110,8 @@ def post(url, data={}, **kwargs):
     elif url == '/topics/':
         return codes.created, s({'topic_id':1})
     elif url == '/topics/1/comments/':
+        return codes.ok, s({})
+    elif url == '/vips/1/':
         return codes.ok, s({})
     return 0, None
 
