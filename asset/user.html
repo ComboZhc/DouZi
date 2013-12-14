@@ -1,15 +1,12 @@
 $def with (user)
-$var title:说说-查看用户
+$var title:查看用户
 $var active:
 $var css:user.css
-$var js:
+$var js:None
   <div class="container-my clearfix">
     <div class="pull-left list-group subcontainer-my">
       <div href="#" class="list-group-item active">$user.username
-        $if user.gender == 'm':
-          <img width="16" src='/static/img/male.png'/>
-        $else:
-          <img width="16" src='/static/img/female.png'/>
+        $:image_gender(user.gender)
         $if session.user.is_admin or session.user.user_id == user.user_id:
           <a href="/users/$(user.user_id)/edit/" class="btn-sm btn-info" role="button">编辑</a>
       </div>

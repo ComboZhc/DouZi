@@ -2,16 +2,11 @@ import requests
 import web
 import json
 from simplejson import JSONDecodeError
+from utils import storify as s
 
-def s(mapping):
-    if isinstance(mapping, dict):
-        return web.storify(mapping)
-    if isinstance(mapping, list):
-        return [web.storify(x) for x in mapping]
-        
 import mocks
 
-mock = False
+mock = True
 base = 'http://lixiao.3owl.com/'
 
 def get(url, **kwargs):

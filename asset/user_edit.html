@@ -1,8 +1,8 @@
 $def with (user)
-$var title:说说-修改用户信息
+$var title:修改用户信息
 $var active:5
 $var css:user.css
-$var js:
+$var js:None
   <form class="form-user-edit" action="/users/$(user.user_id)/edit/" method="post">
     <div class="form-group">
       <input type="text" class="form-control" placeholder="用户名" name="username" autofocus value="$(user.username)">

@@ -52,6 +52,12 @@ def flash(message=None):
 def image_path(filename):
     return os.path.join('static', 'image', filename)
 
+def image_gender(gender):
+    if gender == 'm':
+        return '<img width="16" height="16" src="/static/img/male.png"/>'
+    else:
+        return '<img width="16" height="16" src="/static/img/female.png"/>'
+
 class Home:
     def GET(self):
         if session.user:
@@ -184,11 +190,12 @@ class Topic:
     def GET(self, id):
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.get('/topics/%i/' % int(id))
-        s, i = client.get('/topics/%i/comments/' % int(id))
-        if r == codes.ok:
-            return render.topics_detail(topic=j,comments=i)
-        else:
+        if r != codes.ok:
             return web.notfound()
+        r, c = client.get('/topics/%i/comments/' % int(id))
+        if r != codes.ok:
+            return web.notfound()
+        return render.topics_detail(topic=j,comments=c)
             
 class TopicEdit:
     def GET(self, id):
