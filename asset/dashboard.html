@@ -9,20 +9,19 @@ $var js:
       <a class="btn btn-lg btn-success" href="/reg/" role="button">注册</a>
       <a class="btn btn-lg btn-info" href="/login/" role="button">登陆</a>
     </div>
-	$for t in dashboard:
-		$if loop.index % 4 == 1:
-			<div class="row">
-		<div class="col-lg-3">
-		<div class="panel panel-success">
-			<div class="panel-heading">
-				<h3 class="panel-title"><a href="/topics/$t.topic_id/">$t.title</a></h3>
-			</div>
-		
-			<div class="panel-body">$t.content</div>
-		</div>
-		</div>
-		$if loop.index % 4 == 0 or loop.last:
-			</div>
+  $for t in dashboard:
+    $if loop.index % 4 == 1:
+      <div class="row">
+    <div class="col-lg-3">
+      <div class="panel panel-success">
+        <div class="panel-heading">
+          <h3 class="panel-title"><a href="/topics/$t.topic_id/">$t.title</a></h3>
+        </div>
+      <div class="panel-body">$t.content</div>
+      </div>
+    </div>
+    $if loop.index % 4 == 0 or loop.last:
+      </div>
   <div class="footer">
     <p>&copy; Company 2013</p>
   </div>

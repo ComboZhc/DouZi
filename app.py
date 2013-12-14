@@ -9,15 +9,15 @@ urls = (
     r'/login/?', 'Login',
     r'/logout/?', 'Logout',
     r'/reg/?', 'Reg',
+    r'/users/','UserList',
     r'/users/(\d+)/?', 'User',
     r'/users/(\d+)/edit/?', 'UserEdit',
+    r'/topics/','TopicList',
     r'/topics/new/?', 'TopicNew',
+    r'/topics/my/','MyTopics',
+    r'/topics/(\d+)/','Topic',
     r'/topics/(\d+)/edit/?', 'TopicEdit',
     r'/topics/(\d+)/delete/?', 'TopicDelete',
-    r'/topics/','TopicList',
-    r'/topics/(\d+)/','Topic',
-    r'/topics/my/','MyTopics',
-    r'/users/','UserList',
     r'/topics/(\d+)/comments/', 'TopicComment',
 )
 app = web.application(urls, globals())
@@ -51,7 +51,6 @@ def flash(message=None):
 
 def image_path(filename):
     return os.path.join('static', 'image', filename)
-
 
 class Home:
     def GET(self):
@@ -139,6 +138,7 @@ class TopicList:
     def GET(self):
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.get('/topics/')
+        print r, j
         if r == codes.ok:
             return render.dashboard(dashboard=j)
         else:
