@@ -9,6 +9,17 @@ $var js:None
         $:image_gender(user.gender)
         $if session.user.is_admin or session.user.user_id == user.user_id:
           <a href="/users/$(user.user_id)/edit/" class="btn-sm btn-info" role="button">编辑</a>
+          $if not session.user.is_vip and not session.user.is_admin:
+            <a href="/vips/$(user.user_id)/req/" class="btn-sm btn-info" role="button">申请VIP</a>
+      	$if session.user.is_admin:
+          $if not user.is_vip:
+            <a href="/vips/$(user.user_id)/1/" class="btn-sm btn-info" role="button">提为VIP</a>
+          $else:
+            <a href="/vips/$(user.user_id)/0/" class="btn-sm btn-info" role="button">取消VIP</a>
+          $if user.is_banned:
+            <a href="/users/$(user.user_id)/ban/0/" class="btn-sm btn-info" role="button">解禁</a>
+          $else:
+            <a href="/users/$(user.user_id)/ban/1/" class="btn-sm btn-info" role="button">封禁</a>
       </div>
       <div href="#" class="list-group-item">$user.email</div>
       <div href="#" class="list-group-item">$user.phone</div>

@@ -51,7 +51,7 @@ def get(url, **kwargs):
                 'content':u'天凤就是个垃圾游戏，不服来辩',
                 'is_public':1,
             }])
-    elif url == "/users/":
+    elif url == "/users/" or url == "/bans/" or url == "/vips/" or url == "/vips/pending/":
         return codes.ok, s(
             [{
                 "username":"admin",
@@ -149,7 +149,7 @@ def post(url, data={}, **kwargs):
                 'user_id':1,
                 'is_vip':0,
                 'is_banned':0,
-                'is_admin':0,
+                'is_admin':1,
                 'is_public':1, 
             })
         else:
@@ -159,6 +159,8 @@ def post(url, data={}, **kwargs):
     elif url == '/topics/':
         return codes.created, s({'topic_id':1})
     elif url == '/topics/1/comments/':
+        return codes.ok, s({})
+    elif url == '/vips/1/':
         return codes.ok, s({})
     return 0, None
 
