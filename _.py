@@ -24,3 +24,8 @@ class vip:
     class set:
         ok = u'VIP修改成功'
         fail = u'VIP修改失败'
+
+class notification:
+    class new:
+        ok = u'发送通知成功'
+        fail = u'发送通知失败'

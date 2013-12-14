@@ -24,6 +24,8 @@ urls = (
     r'/vips/', 'VipList',
     r'/vips/pending/', 'VipPending',
     r'/vips/(\d+)/(\d+)/','VipSet',
+    r'/bans/', 'BanList',
+    r'/notifications/new/', 'NotificationsNew',
 )
 app = web.application(urls, globals())
 
@@ -279,6 +281,18 @@ class VipPending:
         r, j = client.get('/vips/pending/')
         if r == codes.ok:
             return render.user_list(user_list=j)
+<<<<<<< HEAD
+=======
+        else:
+            return web.notfound()
+
+class VipRequest:
+    def GET(self, id):
+        render = web.template.render('asset',base='after.common', globals=globals())
+        r, j = client.post('/vips/%i/' % int(id))
+        if r == codes.ok:
+            return web.redirect('/users/%i/' % int(id))
+>>>>>>> b5b720f10aac7235020fae11bfa4bd296c1807de
         else:
             return web.notfound()
 
@@ -293,14 +307,32 @@ class VipSet:
             j.is_vip = v
             r, j = client.put('/users/%i/' % int(id), data=j)
             if r == codes.accepted:
-                flash(_.vip.set.ok)
+                flash(_.vip.set.fail)
                 return web.redirect('/users/%i/' % int(id))
             else:
-                flash(_.vip.set.ok)
+                flash(_.vip.set.fail)
                 return web.redirect('/users/%i/' % int(id))
         else:
-            flash(_.vip.set.ok)
+            flash(_.vip.set.fail)
             return web.redirect('/users/%i/' % int(id))
+
+class NotificationsNew:
+    def GET(self):
+        render = web.template.render('asset', base='after.common', globals=globals())
+        return render.notifications_new()
+
+    def POST(self):
+        i = web.input()
+        render = web.template.render('asset', base='after.common', globals=globals())
+        r, j = client.post('/notifications/new/', data=i)
+        if r == codes.ok:
+            flash(_.notification.new.ok)
+            raise web.redirect('/notifications/new/')
+        else:
+            flash(_.notification.new.fail)
+            raise web.redirect('/notifications/new/')
+
+>>>>>>> b5b720f10aac7235020fae11bfa4bd296c1807de
 
 if __name__ == "__main__":
     app.run()
