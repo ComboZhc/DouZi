@@ -19,3 +19,8 @@ class topic:
     class edit:
         ok = u'修改话题成功'
         fail = u'修改话题失败'
+
+class vip:
+    class set:
+        ok = u'VIP修改成功'
+        fail = u'VIP修改失败'

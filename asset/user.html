@@ -7,23 +7,27 @@ $var js:None
     <div class="pull-left list-group subcontainer-my">
       <div href="#" class="list-group-item active">$user.username
         $:image_gender(user.gender)
-        $if session.user.is_admin or session.user.user_id == user.user_id:
-          <a href="/users/$(user.user_id)/edit/" class="btn-sm btn-info" role="button">编辑</a>
+        <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">操作<span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          $if session.user.is_admin or session.user.user_id == user.user_id:
+            <li><a href="/users/$(user.user_id)/edit/">编辑</a></li>
           $if not session.user.is_vip and not session.user.is_admin:
-            <a href="/vips/$(user.user_id)/req/" class="btn-sm btn-info" role="button">申请VIP</a>
-      	$if session.user.is_admin:
-          $if not user.is_vip:
-            <a href="/vips/$(user.user_id)/1/" class="btn-sm btn-info" role="button">提为VIP</a>
-          $else:
-            <a href="/vips/$(user.user_id)/0/" class="btn-sm btn-info" role="button">取消VIP</a>
-          $if user.is_banned:
-            <a href="/users/$(user.user_id)/ban/0/" class="btn-sm btn-info" role="button">解禁</a>
-          $else:
-            <a href="/users/$(user.user_id)/ban/1/" class="btn-sm btn-info" role="button">封禁</a>
+            <li><a href="/vips/$(user.user_id)/2/">申请VIP</a></li>
+          $if session.user.is_admin:
+            $if not user.is_vip:
+              <li><a href="/vips/$(user.user_id)/1/">提为VIP</a></li>
+            $else:
+              <li><a href="/vips/$(user.user_id)/0/">取消VIP</a></li>
+            $if user.is_banned:
+              <li><a href="/users/$(user.user_id)/ban/0/">解禁</a></li>
+            $else:
+              <li><a href="/users/$(user.user_id)/ban/1/">封禁</a></li>
+        </ul>
       </div>
       <div href="#" class="list-group-item">$user.email</div>
       <div href="#" class="list-group-item">$user.phone</div>
-      <div href="#" class="list-group-item">$user.location</div>
+      <div href="#" class="list-group-item">@ $user.location</div>
     </div>
     <div class="pull-right subcontainer-my">
         <div class="clearfix">

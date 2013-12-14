@@ -21,7 +21,7 @@
 .form-topic-new .form-control:focus {
   z-index: 2;
 }
-.panel {
+#topic-detail.panel {
   width: 600px;
   margin: 0 auto;
 }

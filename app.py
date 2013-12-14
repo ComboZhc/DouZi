@@ -20,11 +20,10 @@ urls = (
     r'/topics/(\d+)/edit/?', 'TopicEdit',
     r'/topics/(\d+)/delete/?', 'TopicDelete',
     r'/topics/(\d+)/comments/', 'TopicComment',
+    r'/bans/', 'BanList',
     r'/vips/', 'VipList',
     r'/vips/pending/', 'VipPending',
-    r'/vips/(\d+)/req/', 'VipRequest',
-    r'/bans/', 'BanList',
-    r'/vips/(\d+)/(\d+)/','UserBan',
+    r'/vips/(\d+)/(\d+)/','VipSet',
 )
 app = web.application(urls, globals())
 
@@ -70,7 +69,7 @@ class Home:
             raise web.redirect('/topics/')
         else:
             render = web.template.render('asset', base='after.common', globals=globals())
-            return render.dashboard(dashboard=[])
+            return render.topics_list(topics=[])
 
 class Login:        
     def GET(self):
@@ -154,7 +153,6 @@ class UserBan:
             return web.redirect('/users/%i/' % int(id))
         j.is_banned = int(is_banned)
         r, j = client.put('/users/%i/' % int(id), data=j)
-#        raise r
         return web.redirect('/users/%i/' % int(id))
 
 class TopicList:
@@ -163,7 +161,7 @@ class TopicList:
         r, j = client.get('/topics/')
         print r, j
         if r == codes.ok:
-            return render.dashboard(dashboard=j)
+            return render.topics_list(topics=j)
         else:
             return web.notfound()
 
@@ -199,7 +197,7 @@ class MyTopics:
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.get('/users/%i/topics/' % int(session.user.user_id))
         if r == codes.ok:
-            return render.topics_my(dashboard=j)
+            return render.topics_my(topics=j)
         else:
             return web.notfound()
             
@@ -262,7 +260,7 @@ class BanList:
         render = web.template.render('asset',base='after.common', globals=globals())
         r, j = client.get('/bans/')
         if r == codes.ok:
-                return render.user_list(user_list=j)
+            return render.user_list(user_list=j)
         else:
             return web.notfound()
 
@@ -271,7 +269,7 @@ class VipList:
         render = web.template.render('asset',base='after.common', globals=globals())
         r, j = client.get('/vips/')
         if r == codes.ok:
-                return render.user_list(user_list=j)
+            return render.user_list(user_list=j)
         else:
             return web.notfound()
 
@@ -280,30 +278,29 @@ class VipPending:
         render = web.template.render('asset',base='after.common', globals=globals())
         r, j = client.get('/vips/pending/')
         if r == codes.ok:
-                return render.user_list(user_list=j)
-        else:
-            return web.notfound()
-
-class VipRequest:
-    def GET(self, id):
-        render = web.template.render('asset',base='after.common', globals=globals())
-        r, j = client.post('/vips/%i/' % int(id))
-        if r == codes.ok:
-            return web.redirect('/users/%i/' % int(id))
+            return render.user_list(user_list=j)
         else:
             return web.notfound()
 
 class VipSet:
     def GET(self, id, is_vip):
         render = web.template.render('asset', base='after.common', globals=globals())
+        v = int(is_vip)
         r, j = client.get('/users/%i/' % int(id))
         if r != codes.ok:
+            return web.notfound()
+        if session.user.is_admin or session.user.user_id == int(id) and v == 2:
+            j.is_vip = v
+            r, j = client.put('/users/%i/' % int(id), data=j)
+            if r == codes.accepted:
+                flash(_.vip.set.ok)
+                return web.redirect('/users/%i/' % int(id))
+            else:
+                flash(_.vip.set.ok)
+                return web.redirect('/users/%i/' % int(id))
+        else:
+            flash(_.vip.set.ok)
             return web.redirect('/users/%i/' % int(id))
-        j.is_banned = int(is_vip)
-        r, j = client.put('/users/%i/' % int(id), data=j)
-
-        return web.redirect('/users/%i/' % int(id))
-
 
 if __name__ == "__main__":
     app.run()

@@ -20,7 +20,7 @@ u = s({
 def get(url, **kwargs):
     if url == "/users/1/":
         return codes.ok, u
-    elif url == "/topics/":
+    elif url == "/topics/" or url == "/users/1/topics/":
         return codes.ok, s(
             [{
                 'topic_id':1,
@@ -131,7 +131,7 @@ def get(url, **kwargs):
     elif url == "/topics/1/comments/":
         return codes.ok, s([
                 {
-                   'creator':u,
+                    'creator':u,
                     'content':'lzsb',
                 },
                 {

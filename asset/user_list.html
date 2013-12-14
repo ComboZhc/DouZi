@@ -15,11 +15,7 @@ $var js:None
         <div class="col-lg-3">
         <div class="panel panel-info">
             <div class="panel-heading">
-                <h3 class="panel-title">$t.username
-                $if t.gender == 'm':
-                    <img width="16" src="/static/img/male.png">
-                $else:
-                    <img width="16" src="/static/img/female.png">
+                <h3 class="panel-title">$t.username $:image_gender(t.gender)
                 </h3>
             </div>
             <div class="panel-body">

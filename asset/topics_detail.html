@@ -9,7 +9,7 @@ $var js:None
             <a class="btn btn-lg btn-success" href="/reg/" role="button">注册</a>
             <a class="btn btn-lg btn-info" href="/login/" role="button">登陆</a>
         </div>
-    <div class="panel panel-danger">
+    <div id="topic-detail" class="panel panel-danger">
         <div class="panel-heading">
             <div class="row">
             <div class="col-lg-10">
@@ -51,6 +51,7 @@ $var js:None
                 $for c in comments:
                     <div class="container">$c.creator.username $:image_gender(c.creator.gender) : $c.content</div>
                 <form>
+
                 </form>
             </div>
         </div>
