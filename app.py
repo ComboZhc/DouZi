@@ -9,23 +9,24 @@ urls = (
     r'/login/?', 'Login',
     r'/logout/?', 'Logout',
     r'/reg/?', 'Reg',
-    r'/users/','UserList',
-    r'/users/(\d+)/ban/(\d+)/','UserBan',
-    r'/users/(\d+)/', 'User',
+    r'/users/?','UserList',
+    r'/users/(\d+)/ban/(\d+)/?','UserBan',
+    r'/users/(\d+)/?', 'User',
     r'/users/(\d+)/edit/?', 'UserEdit',
-    r'/topics/','TopicList',
+    r'/topics/?','TopicList',
+    r'/topics/hot/?','TopicHotList',
     r'/topics/new/?', 'TopicNew',
-    r'/topics/my/','MyTopics',
+    r'/topics/my/?','MyTopics',
     r'/topics/(\d+)/','Topic',
     r'/topics/(\d+)/edit/?', 'TopicEdit',
     r'/topics/(\d+)/delete/?', 'TopicDelete',
-    r'/topics/(\d+)/comments/', 'TopicComment',
-    r'/bans/', 'BanList',
-    r'/vips/', 'VipList',
-    r'/vips/pending/', 'VipPending',
-    r'/vips/(\d+)/(\d+)/','VipSet',
-    r'/bans/', 'BanList',
-    r'/notifications/new/', 'NotificationsNew',
+    r'/topics/(\d+)/comments/?', 'TopicComment',
+    r'/bans/?', 'BanList',
+    r'/vips/?', 'VipList',
+    r'/vips/pending/?', 'VipPending',
+    r'/vips/(\d+)/(\d+)/?','VipSet',
+    r'/bans/?', 'BanList',
+    r'/notifications/new/?', 'NotificationsNew',
 )
 app = web.application(urls, globals())
 
@@ -161,7 +162,15 @@ class TopicList:
     def GET(self):
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.get('/topics/')
-        print r, j
+        if r == codes.ok:
+            return render.topics_list(topics=j)
+        else:
+            return web.notfound()
+
+class TopicHotList:
+    def GET(self):
+        render = web.template.render('asset', base='after.common', globals=globals())
+        r, j = client.get('/topics/hot/')
         if r == codes.ok:
             return render.topics_list(topics=j)
         else:
@@ -281,18 +290,6 @@ class VipPending:
         r, j = client.get('/vips/pending/')
         if r == codes.ok:
             return render.user_list(user_list=j)
-<<<<<<< HEAD
-=======
-        else:
-            return web.notfound()
-
-class VipRequest:
-    def GET(self, id):
-        render = web.template.render('asset',base='after.common', globals=globals())
-        r, j = client.post('/vips/%i/' % int(id))
-        if r == codes.ok:
-            return web.redirect('/users/%i/' % int(id))
->>>>>>> b5b720f10aac7235020fae11bfa4bd296c1807de
         else:
             return web.notfound()
 
@@ -331,8 +328,6 @@ class NotificationsNew:
         else:
             flash(_.notification.new.fail)
             raise web.redirect('/notifications/new/')
-
->>>>>>> b5b720f10aac7235020fae11bfa4bd296c1807de
 
 if __name__ == "__main__":
     app.run()

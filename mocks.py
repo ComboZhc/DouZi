@@ -20,7 +20,7 @@ u = s({
 def get(url, **kwargs):
     if url == "/users/1/":
         return codes.ok, u
-    elif url == "/topics/" or url == "/users/1/topics/":
+    elif url == "/topics/" or url == "/users/1/topics/" or url == "/topics/hot/":
         return codes.ok, s(
             [{
                 'topic_id':1,
@@ -160,7 +160,7 @@ def post(url, data={}, **kwargs):
         return codes.created, s({'topic_id':1})
     elif url == '/topics/1/comments/':
         return codes.ok, s({})
-    elif url == '/vips/1/':
+    elif url == '/vips/1/0/' or url == '/vips/1/1/' or url == url == '/vips/1/1/':
         return codes.ok, s({})
     elif url == '/notifications/new/':
         return codes.ok, s({})
