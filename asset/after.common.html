@@ -40,8 +40,6 @@ $def with (content)
                     <li><a href="/topics/my/">我的话题</a></li>
                     <li class="divider"></li>
                     <li><a href="/topics/new/">创建话题</a></li>
-                    $if session.user.is_admin == 1:
-                      <li><a href="#">人气话题</a></li>
                 </ul>
               </li>
               <li class="dropdown">
@@ -58,11 +56,25 @@ $def with (content)
               <li><a href="/users/">用户列表</a></li>
               $if session.user:
                 <li><a href="/users/$(session.user.user_id)/">我的资料</a></li>
+              $if session.user.is_admin == 1:
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">管理<b class="caret"></b></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="/vips/pending/">VIP申请</a></li>
+                    <li><a href="/vips/">VIP用户</a></li>
+                    <li><a href="/bans/">封禁的用户</a></li>
+                    <li><a href="/notifications/new/">发送系统通知</a></li>
+                  </ul>
+                </li>
+              $elif session.user.is_vip == 1:
+                <li><a href="/notifications/new/vip/">发送VIP广告</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
               $if session.user:
+                <li><a href="/notifications/">通知</a></li>
                 <p class="navbar-text">欢迎回来, $session.username</p>
                 <a id="logout-btn" role="button" class="pull-right btn btn-primary btn-sm" href="/logout/">登出</a>
+                <a id="vip-btn" role="button" class="pull-right btn btn-warning btn-sm" href="/logout/">VIP申请</a>
             </ul>
           </div>
         </nav>

@@ -98,8 +98,8 @@ a:hover {
   height: 48px;
 }
 
-#logout-btn {
-  margin: 10px 0;
+#vip-btn, #logout-btn {
+  margin: 10px 1px;
 }
 
 #main {
