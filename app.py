@@ -23,8 +23,9 @@ urls = (
     r'/vips/', 'VipList',
     r'/vips/pending/', 'VipPending',
     r'/vips/(\d+)/req/', 'VipRequest',
+    r'/vips/(\d+)/(\d+)/','VipSet',
     r'/bans/', 'BanList',
-    r'/vips/(\d+)/(\d+)/','UserBan',
+    r'/notifications/new/', 'NotificationsNew',
 )
 app = web.application(urls, globals())
 
@@ -264,7 +265,7 @@ class VipList:
         render = web.template.render('asset',base='after.common', globals=globals())
         r, j = client.get('/vips/')
         if r == codes.ok:
-                return render.user_list(user_list=j)
+            return render.user_list(user_list=j)
         else:
             return web.notfound()
 
@@ -273,7 +274,7 @@ class VipPending:
         render = web.template.render('asset',base='after.common', globals=globals())
         r, j = client.get('/vips/pending/')
         if r == codes.ok:
-                return render.user_list(user_list=j)
+            return render.user_list(user_list=j)
         else:
             return web.notfound()
 
@@ -296,6 +297,22 @@ class VipSet:
         r, j = client.put('/users/%i/' % int(id), data=j)
 
         return web.redirect('/users/%i/' % int(id))
+
+class NotificationsNew:
+    def GET(self):
+        render = web.template.render('asset', base='after.common', globals=globals())
+        return render.notifications_new()
+
+    def POST(self):
+        i = web.input()
+        render = web.template.render('asset', base='after.common', globals=globals())
+        r, j = client.post('/notifications/new/', data=i)
+        if r == codes.ok:
+            flash(_.notification.new.ok)
+            raise web.redirect('/notifications/new/')
+        else:
+            flash(_.notification.new.fail)
+            raise web.redirect('/notifications/new/')
 
 
 if __name__ == "__main__":

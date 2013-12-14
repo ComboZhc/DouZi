@@ -113,6 +113,8 @@ def post(url, data={}, **kwargs):
         return codes.ok, s({})
     elif url == '/vips/1/':
         return codes.ok, s({})
+    elif url == '/notifications/new/':
+        return codes.ok, s({})
     return 0, None
 
 def put(url, data={}, **kwargs):

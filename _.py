@@ -19,3 +19,8 @@ class topic:
     class edit:
         ok = u'修改话题成功'
         fail = u'修改话题失败'
+
+class notification:
+    class new:
+        ok = u'发送通知成功'
+        fail = u'发送通知失败'
