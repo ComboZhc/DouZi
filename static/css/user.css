@@ -9,6 +9,7 @@
 }
 .subcontainer-my {
   max-width: 330px;
+  min-width: 220px;
 }
 .form-user-edit {
   max-width: 330px;

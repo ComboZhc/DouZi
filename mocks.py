@@ -61,6 +61,28 @@ def get(url, **kwargs):
                 'content':u'吃吃拆此航次吃',
                 'is_public':1
         })
+    elif url == "/topics/1/comments/":
+        return codes.ok, s(
+            [
+                {
+                    "username":"克长",
+                    "user_id":1,
+                    "content":"lzsb",
+                    "datetime":"2012/10/12"
+                },
+                {
+                    "username":"克长",
+                    "user_id":1,
+                    "content":"lzsb",
+                    "datetime":"2012/10/14"
+                },
+                {
+                    "username":"克长",
+                    "user_id":1,
+                    "content":"lzsb",
+                    "datetime":"2012/10/13"
+                }
+            ])
     return 0, None
 
 def post(url, data={}, **kwargs):
@@ -80,6 +102,8 @@ def post(url, data={}, **kwargs):
         return codes.created, s({'user_id':1})
     elif url == '/topics/':
         return codes.created, s({'topic_id':1})
+    elif url == '/topics/1/comments/':
+        return codes.ok, s({})
     return 0, None
 
 def put(url, data={}, **kwargs):

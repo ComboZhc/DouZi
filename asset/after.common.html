@@ -14,32 +14,67 @@ $def with (content)
     $if content.css:
       $for f in content.css.split():
         <link rel="stylesheet" href="/static/css/$f"/>
-    $if content.js:
-      $for f in content.js.split():
-        <link rel="javascript" type="text/javascript" href="/static/js/$f"/>
   </head>
   <body>
-<div class="container">
-  <div class="header">
-    <div class="clearfix masthead">
-      <img id="logo" class="pull-left" src="/static/img/logo.png"/>
-      $if session.user:
-        <h4 id="prompt" class="pull-right text-muted">欢迎回来, $session.username<a role="button" class="btn btn-primary" href="/logout/">登出</a></h4>
-    </div>
-    <ul class="nav nav-justified">
-      <li $:('class="active"' if content.active=='1' else '')><a href="/">话题列表</a></li>
-      <li $:('class="active"' if content.active=='2' else '')><a href="/users/">用户列表</a></li>
-      $if session.user:
-        <li $:('class="active"' if content.active=='3' else '')><a href="/topics/new/">新的话题</a></li>
-        <li $:('class="active"' if content.active=='4' else '')><a href="/topics/my/">我的话题</a></li>
-        <li $:('class="active"' if content.active=='5' else '')><a href="/users/$(session.user.user_id)/">我的资料</a></li>
-      $else:
-        <li $:('class="active"' if content.active=='6' else '')><a href="/">新的话题</a></li>
-        <li $:('class="active"' if content.active=='7' else '')><a href="/">我的话题</a></li>
-        <li $:('class="active"' if content.active=='8' else '')><a href="/">我的资料</a></li>
-    </ul>
-  </div>
+    <header class="navbar navbar-fixed-top" role="banner">
+      <div class="container">
+        <nav class="collapse navbar-collapse" role="navigation">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+              <span class="sr-only">切换导航</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <img id="logo" src="/static/img/logo.png"/>
+          </div>
+
+          <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+              <li><p class="navbar-text">$content.title</p></li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">话题<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="/">话题列表</a></li>
+                  $if session.user:
+                    <li><a href="/topics/my/">我的话题</a></li>
+                    <li class="divider"></li>
+                    <li><a href="/topics/new/">创建话题</a></li>
+                    $if session.user.is_admin == 1:
+                      <li><a href="#">人气话题</a></li>
+                </ul>
+              </li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">小组<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#">小组列表</a></li>
+                  $if session.user:
+                    <li><a href="#">我的小组</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#">管理小组</a></li>
+                    <li><a href="#">创建小组</a></li>
+                </ul>
+              </li>
+              <li><a href="/users/">用户列表</a></li>
+              $if session.user:
+                <li><a href="/users/$(session.user.user_id)/">我的资料</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              $if session.user:
+                <p class="navbar-text">欢迎回来, $session.username</p>
+                <a id="logout-btn" role="button" class="pull-right btn btn-primary btn-sm" href="/logout/">登出</a>
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </header>
+    <div id="main" class="container">
     $:content
-</div>
+    </div>
+    <script src="/static/jquery/jquery-2.0.3.min.js"></script>
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    $if content.js:
+      $for f in content.js.split():
+        <script src="/static/js/$f"/>
   </body>
 </html>
