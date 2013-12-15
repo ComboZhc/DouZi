@@ -148,9 +148,10 @@ class User:
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.get('/users/%i/' % int(id))
         if r == codes.ok:
-            return render.user(user=j)
-        else:
-            return web.notfound()
+            r, f = client.get('/users/%i/friends/' % int(id))
+            if r == codes.ok:
+                return render.user(user=j,friends=f)
+        return web.notfound()
 
 class UserEdit:
     def GET(self, id):

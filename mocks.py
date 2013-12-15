@@ -36,10 +36,10 @@ users = [s({
     'phone':'123456789',
     'description':u'呵呵',
     'location':'床上',
-    'is_vip':0,
+    'is_vip':1,
     'is_banned':0,
     'is_admin':0,
-    'is_public':0, 
+    'is_public':1, 
 })]
 
 u = users[0]
@@ -51,6 +51,8 @@ def get(url, **kwargs):
         return codes.ok, u
     elif url == "/users/2/":
         return codes.ok, u2
+    elif url == "/users/3/":
+        return codes.ok, u3
     elif url == "/topics/" or url == "/users/1/topics/" or url == "/topics/hot/":
         return codes.ok, s(
             [{
@@ -190,6 +192,12 @@ def get(url, **kwargs):
                         }
                     ]
                 })
+    elif url == '/users/1/friends/':
+        return codes.ok, s([u2, u3])
+    elif url == '/users/2/friends/':
+        return codes.ok, s([u3])
+    elif url == '/users/3/friends/':
+        return codes.ok, s([])
     return 0, None
 
 def post(url, data={}, **kwargs):

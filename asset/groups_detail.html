@@ -49,7 +49,7 @@ $var css:group.css
                     <div class="members-header">小组成员</div>
                     <div class="members">
                         $for item in group.members:
-                            <span class="member-name"><a href="/users/$item.user_id/">$item.username</a></span>$:image_gender(item.gender) &nbsp;
+                            <a href="/users/$item.user_id/">$item.username</a>$:image_gender(item.gender) &nbsp;
                     </div>
                 </div>
             </div>
