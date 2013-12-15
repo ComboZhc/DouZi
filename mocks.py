@@ -66,7 +66,7 @@ def get(url, **kwargs):
                 "is_public":"0"
             },{
                 "username":"aaa",
-                "user_id":"1",
+                "user_id":"2",
                 "email":"admin@localhost",
                 "gender":"m",
                 "phone":"1234567890",
@@ -77,7 +77,7 @@ def get(url, **kwargs):
                 "is_public":"0"
             },{
                 "username":"bbb",
-                "user_id":"1",
+                "user_id":"3",
                 "email":"admin@localhost",
                 "gender":"m",
                 "phone":"1234567890",
@@ -88,7 +88,7 @@ def get(url, **kwargs):
                 "is_public":"0"
             },{
                 "username":"ccc",
-                "user_id":"1",
+                "user_id":"4",
                 "email":"admin@localhost",
                 "gender":"m",
                 "phone":"1234567890",
@@ -128,7 +128,7 @@ def get(url, **kwargs):
                 'content':u'吃吃吃吃吃吃吃吃吃吃吃吃吃吃吃',
                 'is_public':1,
         })
-    elif url == "/topics/1/comments/":
+    elif url == "/topics/1/comments/" or url == "/topics/2/comments/" or url == "/topics/3/comments/" or url == "/topics/4/comments/":
         return codes.ok, s([
                 {
                     'comment_id':1,
@@ -146,12 +146,12 @@ def get(url, **kwargs):
 def post(url, data={}, **kwargs):
     data = s(json.loads(data))
     if url == '/login/':
-        if data['username'] == data['password']:
+        if data.username == data.password:
             return codes.ok, s({
                 'user_id':1,
-                'is_vip':0,
-                'is_banned':0,
-                'is_admin':1,
+                'is_vip':1 if data.username == 'vip' else 0,
+                'is_banned':1 if data.username == 'ban' else 0,
+                'is_admin':1 if data.username == 'admin' else 0,
                 'is_public':1, 
             })
         else:

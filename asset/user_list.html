@@ -7,23 +7,22 @@ $var css:userlist.css
         <a class="btn btn-lg btn-success" href="/reg/" role="button">注册</a>
         <a class="btn btn-lg btn-info" href="/login/" role="button">登陆</a>
         </div>
-    $for t in user_list:
+    $for u in user_list:
         $if loop.index % 4 == 1:
             <div class="row">
         <div class="col-lg-3">
         <div class="panel panel-info">
             <div class="panel-heading">
-                <h3 class="panel-title">$t.username $:image_gender(t.gender)
+                <h3 class="panel-title"><a href="/users/$u.user_id/">$u.username $:image_gender(u.gender)</a>
                 </h3>
             </div>
             <div class="panel-body">
-            @ $t.location
+            @ $u.location
             </div>
         </div>
         </div>
         $if loop.index % 4 == 0 or loop.last:
             </div>
-    <!-- Site footer -->
     <div class="footer">
        <p>&copy; Company 2013</p>
     </div>
