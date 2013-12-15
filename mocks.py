@@ -3,7 +3,7 @@ import json
 from requests import codes
 from client import s
 
-u = s({
+users = [s({
     'username':'ComboZhc',
     'user_id':1,
     'email':'zhangchao6865@gmail.com',
@@ -15,11 +15,42 @@ u = s({
     'is_banned':0,
     'is_admin':0,
     'is_public':1, 
-})
+}), s({
+    'username':'Yuehan',
+    'user_id':2,
+    'email':'main.yuehanxu@gmail.com',
+    'gender':'f',
+    'phone':'123456789',
+    'description':u'我是LOL狗',
+    'location':u'上海',
+    'is_vip':0,
+    'is_banned':0,
+    'is_admin':0,
+    'is_public':0, 
+}), s({
+    'username':'Sangbi',
+    'user_id':3,
+    'email':'meishadia@gmail.com',
+    'gender':'m',
+    'phone':'18801734044',
+    'phone':'123456789',
+    'description':u'呵呵',
+    'location':'床上',
+    'is_vip':0,
+    'is_banned':0,
+    'is_admin':0,
+    'is_public':0, 
+})]
+
+u = users[0]
+u2 = users[1]
+u3 = users[2]
 
 def get(url, **kwargs):
     if url == "/users/1/":
         return codes.ok, u
+    elif url == "/users/2/":
+        return codes.ok, u2
     elif url == "/topics/" or url == "/users/1/topics/" or url == "/topics/hot/":
         return codes.ok, s(
             [{
@@ -31,21 +62,21 @@ def get(url, **kwargs):
                 'is_public':1,
             }, {
                 'topic_id':2,
-                'creator':u,
+                'creator':u2,
                 'image_id':2,
                 'title':u'还有比奶子更丧的么',
                 'content':u'RT',
                 'is_public':1,
             }, {
                 'topic_id':3,
-                'creator':u,
+                'creator':u2,
                 'image_id':3,
                 'title':u'这PJ撸个蛋啊',
                 'content':u'sb滚粗',
                 'is_public':1,
             }, {
                 'topic_id':4,
-                'creator':u,
+                'creator':u3,
                 'image_id':4,
                 'title':u'垃圾游戏，怒删',
                 'content':u'天凤就是个垃圾游戏，不服来辩',
@@ -53,40 +84,7 @@ def get(url, **kwargs):
             }])
     elif url == "/users/" or url == "/bans/" or url == "/vips/" or url == "/vips/pending/":
         return codes.ok, s(
-            [{
-                "username":"admin",
-                "user_id":"1",
-                "email":"admin@localhost",
-                "gender":"m",
-                "phone":"1234567890",
-                "location":"localhost",
-                "is_vip":"1",
-                "is_banned":"0",
-                "is_admin":"1",
-                "is_public":"0"
-            },{
-                "username":"aaa",
-                "user_id":"2",
-                "email":"admin@localhost",
-                "gender":"m",
-                "phone":"1234567890",
-                "location":"Shanghai",
-                "is_vip":"1",
-                "is_banned":"0",
-                "is_admin":"1",
-                "is_public":"0"
-            },{
-                "username":"bbb",
-                "user_id":"3",
-                "email":"admin@localhost",
-                "gender":"m",
-                "phone":"188888888",
-                "location":"Beijing",
-                "is_vip":"1",
-                "is_banned":"0",
-                "is_admin":"1",
-                "is_public":"0"
-            },{
+            [u,u2,u3,{
                 "username":"Yuehan Xu",
                 "user_id":"4",
                 "email":"admin@localhost",
@@ -147,49 +145,19 @@ def get(url, **kwargs):
                     'group_id':1,
                     'name':u'吃奶子兴趣小组',
                     'brief':u'陈年马奶子，欢迎来吃',
-                    'creator': 
-                    {
-                        'user_id':1,
-                        'username':'admin',
-                        'email':'meishadia@gmail.com',
-                        'gender':'1',
-                        'phone':'18801734044',
-                        'location':'床上',
-                        'is_vip':0,
-                        'is_admin':0
-                    }
+                    'creator': u
                 },
                 {
                     'group_id':1,
                     'name':u'吃奶子兴趣小组2',
                     'brief':u'陈年马奶子，欢迎来吃',
-                    'creator': 
-                    {
-                        'user_id':2,
-                        'username':'admin2',
-                        'email':'meishadia@gmail.com',
-                        'gender':'1',
-                        'phone':'18801734044',
-                        'location':'床上',
-                        'is_vip':1,
-                        'is_admin':0
-                    }
+                    'creator': u2
                 },
                 {
                     'group_id':1,
                     'name':u'吃奶子兴趣小组3',
                     'brief':u'陈年马奶子，欢迎来吃',
-                    'creator': 
-                    {
-                        'user_id':3,
-                        'username':'admin3',
-                        'email':'meishadia@gmail.com',
-                        'gender':'1',
-                        'phone':'18801734044',
-                        'location':'床上',
-                        'is_vip':0,
-                        'is_admin':1
-                    }
+                    'creator': u3
                 }])
     elif url == "/groups/1/":
         return codes.ok, s(
@@ -197,38 +165,8 @@ def get(url, **kwargs):
                     'group_id':1,
                     'name':u'吃奶子兴趣小组',
                     'brief':u'陈年马奶子，欢迎来吃',
-                    'creator': 
-                    s({
-                        'user_id':1,
-                        'username':'admin',
-                        'email':'meishadia@gmail.com',
-                        'gender':'1',
-                        'phone':'18801734044',
-                        'location':'床上',
-                        'is_vip':0,
-                        'is_admin':0
-                    }),
-                    'members':s([
-                        {
-                            'user_id':1,
-                            'username':'admin',
-                            'email':'meishadia@gmail.com',
-                            'gender':'1',
-                            'phone':'18801734044',
-                            'location':'床上',
-                            'is_vip':0,
-                            'is_admin':0
-                        },
-                        {
-                            'user_id':2,
-                            'username':'loudan',
-                            'email':'meishadia@gmail.com',
-                            'gender':'1',
-                            'phone':'18801733943',
-                            'location':'不明',
-                            'is_vip':1,
-                            'is_admin':1
-                        },
+                    'creator':u3,
+                    'members':[u, u2,
                         {
                             'user_id':3,
                             'username':'陈乃',
@@ -249,7 +187,7 @@ def get(url, **kwargs):
                             'is_vip':1,
                             'is_admin':0
                         }
-                    ])
+                    ]
                 })
     return 0, None
 
@@ -271,24 +209,24 @@ def post(url, data={}, **kwargs):
     elif url == '/topics/':
         return codes.created, s({'topic_id':1})
     elif url == '/topics/1/comments/':
-        return codes.ok, s({})
-    elif url == '/vips/1/0/' or url == '/vips/1/1/' or url == '/vips/1/2/':
-        return codes.ok, s({})
+        return codes.created, s({})
+    elif url == '/users/1/friends/' or url == '/users/2/friends/':
+        return codes.created, s({})
     elif url == '/notifications/new/':
-        return codes.ok, s({})
+        return codes.created, s({})
     elif url == '/groups/':
-        return codes.ok, s({})
+        return codes.created, s({})
     return 0, None
 
 def put(url, data={}, **kwargs):
     if url == "/users/1/":
         return codes.accepted, s({})
-    elif url == "/topics/1/" or url == "/topics/2/" or url == "/topics/3/" or url == "/topics/4/":
-        return codes.ok, None
+    elif url == '/vips/1/0/' or url == '/vips/1/1/' or url == '/vips/1/2/':
+        return codes.ok, s({})
     return 0, None
 
     
 def delete(url, data={}, **kwargs):
-    if url == "/topics/1/" or url == "/topics/2/" or url == "/topics/3/" or url == "/topics/4/":
-        return codes.ok, None
+    if url == "/topics/1/comments/1/" or url == "/topics/1/comments/2/":
+        return codes.accepted, s({})
     return 0, None

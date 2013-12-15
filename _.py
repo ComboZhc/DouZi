@@ -12,6 +12,12 @@ class user:
     class edit:
         ok = u'修改成功'
         fail = u'修改信息错误'
+    class friend:
+        ok = u'关注好友成功'
+        fail = u'已经关注了'
+    class ban:
+        ok = u'用户封禁/解封成功'
+        fail = u'用户封禁/解封失败'
 
 class topic:
     class new:
@@ -25,6 +31,8 @@ class vip:
     class set:
         ok = u'VIP修改成功'
         fail = u'VIP修改失败'
+        class up:
+            ok = u'VIP申请成功'
 
 class notification:
     class new:

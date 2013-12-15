@@ -4,43 +4,36 @@ $var css:user.css
 $var js:None
   <div class="container-my clearfix">
     <div class="pull-left list-group subcontainer-my">
-      <div href="#" class="list-group-item active">$user.username
-        $:image_gender(user.gender)
+      <div href="#" class="list-group-item active">
+        $user.username $:image_gender(user.gender)
         <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">操作<span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu">
-          $if session.user.is_admin or session.user.user_id == user.user_id:
+          $if is_admin() or session.user.user_id == user.user_id:
             <li><a href="/users/$(user.user_id)/edit/">编辑</a></li>
-          $if not session.user.is_vip and not session.user.is_admin:
-            <li><a href="/vips/$(user.user_id)/2/">申请VIP</a></li>
-          $if session.user.is_admin:
-            $if not user.is_vip:
-              <li><a href="/vips/$(user.user_id)/1/">提为VIP</a></li>
+          $if session.user.user_id != user.user_id:
+            <li><form action="/users/$(user.user_id)/friend/" method="post"><button type="submit">关注</button></form></li>
+          $if user.is_vip == 0 and not is_admin():
+            <li><form action="/vips/$(user.user_id)/2/" method="post"><button type="submit">申请VIP</button></form></li>
+          $if is_admin():
+            $if user.is_vip == 0:
+              <li><form action="/vips/$(user.user_id)/1/" method="post"><button type="submit">提为VIP</button></form></li>
+            $elif user.is_vip == 2:
+              <li><form action="/vips/$(user.user_id)/1/" method="post"><button type="submit">批准VIP</button></form></li>
             $else:
-              <li><a href="/vips/$(user.user_id)/0/">取消VIP</a></li>
+              <li><form action="/vips/$(user.user_id)/0/" method="post"><button type="submit">取消VIP</button></form></li>
             $if user.is_banned:
-              <li><a href="/users/$(user.user_id)/ban/0/">解禁</a></li>
+              <li><form action="/users/$(user.user_id)/ban/0/" method="post"><button type="submit">解禁</button></form></li>
             $else:
-              <li><a href="/users/$(user.user_id)/ban/1/">封禁</a></li>
+              <li><form action="/users/$(user.user_id)/ban/1/" method="post"><button type="submit">封禁</button></form></li>
         </ul>
       </div>
-      <div href="#" class="list-group-item">$user.email</div>
-      <div href="#" class="list-group-item">$user.phone</div>
-      <div href="#" class="list-group-item">@ $user.location</div>
+      $if not is_admin() and user.is_public == 0:
+        <div class="list-group-item">TA没有公开相关信息</div>
+      $else:
+        <div class="list-group-item">$user.email</div>
+        <div class="list-group-item">$user.phone</div>
+        <div class="list-group-item">@ $user.location</div>
+        <div class="list-group-item clearfix"><img class="pull-left" src="/static/img/quote_2.png"/>$user.description<img class="pull-right" src="/static/img/quote_1.png"/></div>
     </div>
-    <div class="pull-right subcontainer-my">
-        <div class="clearfix">
-          <img class="pull-left" src="/static/img/quote_2.png"/>
-        </div>
-        <h3>$user.description</h3>
-        <div class="clearfix">
-          <img class="pull-right" src="/static/img/quote_1.png"/>
-        </div>
-    </div>
-  </div>
-  <div class="container-alert clearfix">
-    $if flash():
-      <div class="alert alert-warning">
-      $:flash(True)
-      </div>
   </div>

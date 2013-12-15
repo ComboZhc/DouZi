@@ -25,6 +25,8 @@ def _storify(mapping):
         value = mapping[key]
         if isinstance(value, list):
             value = [_storify(x) for x in value]
+        if isinstance(value, dict):
+            value = _storify(value)
         setattr(stor, key, value)    
     return stor
 

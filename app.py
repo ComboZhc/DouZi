@@ -13,6 +13,7 @@ urls = (
     r'/users/(\d+)/ban/(\d+)/?','UserBan',
     r'/users/(\d+)/?', 'User',
     r'/users/(\d+)/edit/?', 'UserEdit',
+    r'/users/(\d+)/friend/?', 'UserFriend',
     r'/topics/?','TopicList',
     r'/topics/hot/?','TopicHotList',
     r'/topics/new/?', 'TopicNew',
@@ -35,7 +36,7 @@ urls = (
 )
 app = web.application(urls, globals())
 
-web.config.debug = True
+#web.config.debug = True
 
 session = None
 if web.config.get('_session') is None:
@@ -165,15 +166,29 @@ class UserEdit:
         i = web.input()
         i.is_public = int('is_public' in i)
         r, j = client.put('/users/%i/' % int(id), data=i)
-        if r == codes.ok:
+        if r == codes.accepted:
             flash(_.user.edit.ok)
             raise web.redirect('/users/%i/' % int(id))
         else:
             flash(_.user.edit.fail)
             raise web.redirect('/users/%i/edit/' % int(id))
+
+class UserFriend:
+    def POST(self, id):
+        if not user():
+            return web.notfound()
+        render = web.template.render('asset', base='after.common', globals=globals())
+        r, j = client.post('/users/%i/friends/' % user().user_id, data={'friend_id': int(id)})
+        if r == codes.created:
+            flash(_.user.friend.ok)
+            raise web.redirect('/users/%i/' % int(id))
+        else:
+            flash(_.user.friend.fail)
+            raise web.redirect('/users/%i/' % int(id))
+
 			
 class UserBan:
-    def GET(self, id, is_banned):
+    def POST(self, id, is_banned):
         if not is_admin():
             return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
@@ -181,6 +196,10 @@ class UserBan:
         if r == codes.ok:
             j.is_banned = int(is_banned)
             r, j = client.put('/users/%i/' % int(id), data=j)
+            if r == codes.accepted:
+                flash(_.user.ban.ok)
+                return web.redirect('/users/%i/' % int(id))
+        flash(_.user.ban.fail)
         return web.redirect('/users/%i/' % int(id))
 
 class TopicList:
@@ -221,7 +240,7 @@ class TopicNew:
         f.close()
         del i.image
         r, j = client.post('/topics/', data=i)
-        if r == codes.ok:
+        if r == codes.created:
             flash(_.topic.new.ok)
             raise web.redirect('/topics/%i/' % int(j.topic_id))
         else:
@@ -305,16 +324,16 @@ class TopicComment:
             return web.notfound()
         i = web.input()
         r, j = client.post('/topics/%i/comments/' % int(id), data=i)
-        if r == codes.ok:
+        if r == codes.created:
             raise web.redirect('/topics/%i/' % int(id));
         else:
             return web.notfound()
 
 class TopicCommentDelete:
-    def GET(self, topic_id, comment_id):
+    def POST(self, topic_id, comment_id):
         if not is_admin():
             return web.notfound()
-        r, j = client.delete('/topics/%i/comments/%i/' % (int(topic_id), int(id)))
+        r, j = client.delete('/topics/%i/comments/%i/' % (int(topic_id), int(comment_id)))
         if r == codes.accepted:
             raise web.redirect('/topics/%i/' % int(topic_id))
         else:
@@ -354,21 +373,19 @@ class VipPending:
             return web.notfound()
 
 class VipSet:
-    def GET(self, id, is_vip):
-        if not is_admin() or int(is_vip) != 2:
+    def POST(self, id, is_vip):
+        if not is_admin() and int(is_vip) != 2:
             return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.get('/users/%i/' % int(id))
-        if r != codes.ok:
-            return web.notfound()
-        j.is_vip = int(is_vip)
-        r, j = client.put('/users/%i/' % int(id), data=j)
-        if r == codes.accepted:
-            flash(_.vip.set.ok)
-            return web.redirect('/users/%i/' % int(id))
-        else:
-            flash(_.vip.set.fail)
-            return web.redirect('/users/%i/' % int(id))
+        if r == codes.ok:
+            j.is_vip = int(is_vip)
+            r, j = client.put('/users/%i/' % int(id), data=j)
+            if r == codes.accepted:
+                flash(_.vip.set.ok if int(is_vip != 2) else _.vip.set.up.ok)
+                return web.redirect('/users/%i/' % int(id))
+        flash(_.vip.set.fail)
+        return web.redirect('/users/%i/' % int(id))
 
 class NotificationsNew:
     def GET(self):
@@ -384,7 +401,7 @@ class NotificationsNew:
         i.user_id = session.user.user_id
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.post('/notifications/new/', data=i)
-        if r == codes.ok:
+        if r == codes.created:
             flash(_.notification.new.ok)
             raise web.redirect('/notifications/new/')
         else:
@@ -401,7 +418,7 @@ class GroupNew:
         i.user_id = session.user.user_id
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.post('/groups/', data=i)
-        if r == codes.ok:
+        if r == codes.created:
             flash(_.group.new.ok)
             raise web.redirect('/groups/new/')
         else:
