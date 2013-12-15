@@ -17,7 +17,7 @@ urls = (
     r'/topics/?','TopicList',
     r'/topics/hot/?','TopicHotList',
     r'/topics/new/?', 'TopicNew',
-    r'/topics/my/?','MyTopics',
+    r'/topics/my/?','TopicMy',
     r'/topics/(\d+)/','Topic',
     r'/topics/(\d+)/edit/?', 'TopicEdit',
     r'/topics/(\d+)/delete/?', 'TopicDelete',
@@ -31,8 +31,8 @@ urls = (
     r'/notifications/new/?', 'NotificationsNew',
     r'/groups/new/?', 'GroupNew',
     r'/groups/list/?', 'GroupList',
-    r'/groups/mylist/?', 'GroupMyList',
-    r'/groups/detail/(\d+)/?', 'GroupDetail',
+    r'/groups/my/?', 'GroupMy',
+    r'/groups/(\d+)/?', 'Group',
 )
 app = web.application(urls, globals())
 
@@ -253,7 +253,7 @@ class UserList:
         r, j = client.get('/users/');
         return render.user_list(user_list=j)
 
-class MyTopics:
+class TopicMy:
     def GET(self):
         if not user():
             return web.notfound()
@@ -410,46 +410,53 @@ class NotificationsNew:
 
 class GroupNew:
     def GET(self):
+        if not user():
+            return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
         return render.groups_new()
 
     def POST(self):
+        if not user():
+            return web.notfound()
         i = web.input()
         i.user_id = session.user.user_id
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.post('/groups/', data=i)
         if r == codes.created:
             flash(_.group.new.ok)
-            raise web.redirect('/groups/new/')
+            raise web.redirect('/groups/%i/' % int(j.group_id))
         else:
             flash(_.group.new.fail)
             raise web.redirect('/groups/new/')
 
 class GroupList:
     def GET(self):
+        if not user():
+            return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.get('/groups/')
         if r == codes.ok:
             return render.groups_list(groups_list=j)
-
         return web.notfound()
 
-class GroupMyList:
+class GroupMy:
     def GET(self):
+        if not user():
+            return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
-        r, j = client.get('/groups/my/')
+        r, j = client.get('/users/%i/groups/' % int(session.user.user_id))
         if r == codes.ok:
             return render.groups_list(groups_list=j)
-
         return web.notfound()
 
-class GroupDetail:
+class Group:
     def GET(self, id):
+        if not user():
+            return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.get('/groups/%i/' % int(id))
         if r == codes.ok:
             return render.groups_detail(group=j)
-
         return web.notfound()
 
 if __name__ == "__main__":
