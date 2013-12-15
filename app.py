@@ -305,6 +305,16 @@ class TopicComment:
         else:
             return web.notfound()
 
+class TopicCommentDelete:
+    def GET(self, topic_id, comment_id):
+        if not is_admin():
+            return web.notfound()
+        r, j = client.delete('/topics/%i/comments/%i/' % (int(topic_id), int(id)))
+        if r == codes.accepted:
+            raise web.redirect('/topics/%i/' % int(topic_id))
+        else:
+            return web.notfound()
+
 class BanList:
     def GET(self):
         if not is_admin():
@@ -357,13 +367,13 @@ class VipSet:
 
 class NotificationsNew:
     def GET(self):
-        if not is_admin() or not is_vip():
+        if not is_admin() and not is_vip():
             return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
         return render.notifications_new()
 
     def POST(self):
-        if not is_admin() or not is_vip():
+        if not is_admin() and not is_vip():
             return web.notfound()
         i = web.input()
         render = web.template.render('asset', base='after.common', globals=globals())
