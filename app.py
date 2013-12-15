@@ -31,18 +31,13 @@ urls = (
     r'/notifications/new/?', 'NotificationsNew',
     r'/groups/new/?', 'GroupNew',
     r'/groups/list/?', 'GroupList',
-<<<<<<< HEAD
-    r'/groups/mylist/?', 'GroupMyList',
-    r'/groups/detail/(\d+)/?', 'GroupDetail',
+    r'/groups/my/?', 'GroupMy',
+    r'/groups/(\d+)/?', 'Group',
     r'/groups/(\d+)/quit/?', 'GroupQuit',
     r'/groups/(\d+)/delete/?', 'GroupQuit',
     r'/groups/(\d+)/join/?', 'GroupJoin',
     r'/groups/(\d+)/approve/(\d+)/(\d+)/?', 'GroupApprove',
-    r'/groups/requests/?', 'GroupRequests',
-=======
-    r'/groups/my/?', 'GroupMy',
-    r'/groups/(\d+)/?', 'Group',
->>>>>>> 7b383bc7d8ed199ce56ac63bc9f51473569085b5
+    r'/groups/requests/?', 'GroupRequests'
 )
 app = web.application(urls, globals())
 
