@@ -139,7 +139,7 @@ def get(url, **kwargs):
                     'content':'楼上',
                 }
             ])
-    elif url == "/groups/":
+    elif url == "/groups/" or url == "/users/1/groups/":
         return codes.ok, s([
                 {
                     'group_id':1,
@@ -158,7 +158,8 @@ def get(url, **kwargs):
                     'name':u'吃奶子兴趣小组3',
                     'brief':u'陈年马奶子，欢迎来吃',
                     'creator': u3
-                }])
+                }
+            ])
     elif url == "/groups/1/":
         return codes.ok, s(
                 {
@@ -229,7 +230,7 @@ def post(url, data={}, **kwargs):
     elif url == '/notifications/new/':
         return codes.created, s({})
     elif url == '/groups/':
-        return codes.created, s({})
+        return codes.created, s({'group_id':1})
     elif url == '/groups/1/requests/':
         return codes.created, s({})
     elif url == '/groups/1/requests/3/':

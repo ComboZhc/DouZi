@@ -7,7 +7,7 @@ $var css:group.css
             <a class="btn btn-lg btn-success" href="/reg/" role="button">注册</a>
             <a class="btn btn-lg btn-info" href="/login/" role="button">登陆</a>
         </div>
-    <div id="topic-detail" class="panel panel-danger">
+    <div id="group-detail" class="panel panel-danger">
         <div class="panel-heading">
             <div class="row">
             <div class="col-lg-10">
@@ -43,16 +43,16 @@ $var css:group.css
             <div class="row">
             <div class="col-lg-12">
                 <div class="container">
-                    <div class="comment">
-                        <span class="comment-content">$group.brief</span>
+                    <div class="group">
+                        <span class="group-content">$group.brief</span>
                     </div>
                 </div>
                 <br />
                 <div class="container">
+                    <div class="members-header">小组成员</div>
                     <div class="members">
                         $for item in group.members:
-                            小组成员:<span class="member-name"><a href="/users/$item.user_id/">$item.username</a></span>$:image_gender(item.gender)
-                            &nbsp;
+                            <span class="member-name"><a href="/users/$item.user_id/">$item.username</a></span>$:image_gender(item.gender) &nbsp;
                     </div>
                 </div>
             </div>
