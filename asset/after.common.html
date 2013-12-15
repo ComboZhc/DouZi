@@ -85,5 +85,14 @@ $def with (content)
     <div id="main" class="container">
     $:content
     </div>
+    <div id='flash' class='flash alert alert-warning' style='display:none'></div>
+    $if flash():
+      <script>
+        $$("#flash").text('$:flash(True)').css({
+          position:'absolute',
+          left:($$(window).width() - $$("#flash").outerWidth())/2,
+          top:($$(window).height() - $$("#flash").outerHeight())/2,
+        }).css("z-index", 999).fadeIn().delay(1500).fadeOut();
+      </script>
   </body>
 </html>

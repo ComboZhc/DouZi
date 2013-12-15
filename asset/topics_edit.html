@@ -21,10 +21,6 @@ $var css:topic.css
         <input type="checkbox" name="is_public" $:('checked="checked"' if topic.is_public else '') />公开话题
 		</label>
     </div>
-    $if flash():
-      <div class="alert alert-warning">
-      $:flash(True)
-      </div>
     <button class="btn btn-lg btn-primary btn-block" type="submit">提交</button>
   </form>
   <div class="footer">
