@@ -28,6 +28,10 @@ urls = (
     r'/vips/(\d+)/(\d+)/?','VipSet',
     r'/bans/?', 'BanList',
     r'/notifications/new/?', 'NotificationsNew',
+    r'/groups/new/?', 'GroupNew',
+    r'/groups/list/?', 'GroupList',
+    r'/groups/mylist/?', 'GroupMyList',
+    r'/groups/detail/(\d+)/?', 'GroupDetail',
 )
 app = web.application(urls, globals())
 
@@ -357,13 +361,13 @@ class VipSet:
 
 class NotificationsNew:
     def GET(self):
-        if not is_admin() or not is_vip():
+        if not is_admin() and not is_vip():
             return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
         return render.notifications_new()
 
     def POST(self):
-        if not is_admin() or not is_vip():
+        if not is_admin() and not is_vip():
             return web.notfound()
         i = web.input()
         render = web.template.render('asset', base='after.common', globals=globals())
@@ -374,6 +378,50 @@ class NotificationsNew:
         else:
             flash(_.notification.new.fail)
             raise web.redirect('/notifications/new/')
+
+class GroupNew:
+    def GET(self):
+        render = web.template.render('asset', base='after.common', globals=globals())
+        return render.groups_new()
+
+    def POST(self):
+        i = web.input()
+        i.user_id = session.user.user_id
+        render = web.template.render('asset', base='after.common', globals=globals())
+        r, j = client.post('/groups/', data=i)
+        if r == codes.ok:
+            flash(_.group.new.ok)
+            raise web.redirect('/groups/new/')
+        else:
+            flash(_.group.new.fail)
+            raise web.redirect('/groups/new/')
+
+class GroupList:
+    def GET(self):
+        render = web.template.render('asset', base='after.common', globals=globals())
+        r, j = client.get('/groups/')
+        if r == codes.ok:
+            return render.groups_list(groups_list=j)
+
+        return web.notfound()
+
+class GroupMyList:
+    def GET(self):
+        render = web.template.render('asset', base='after.common', globals=globals())
+        r, j = client.get('/groups/my/')
+        if r == codes.ok:
+            return render.groups_list(groups_list=j)
+
+        return web.notfound()
+
+class GroupDetail:
+    def GET(self, id):
+        render = web.template.render('asset', base='after.common', globals=globals())
+        r, j = client.get('/groups/%i/' % int(id))
+        if r == codes.ok:
+            return render.groups_detail(group=j)
+
+        return web.notfound()
 
 if __name__ == "__main__":
     app.run()

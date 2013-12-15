@@ -141,6 +141,116 @@ def get(url, **kwargs):
                     'content':'楼上',
                 }
             ])
+    elif url == "/groups/":
+        return codes.ok, s([
+                {
+                    'group_id':1,
+                    'name':u'吃奶子兴趣小组',
+                    'brief':u'陈年马奶子，欢迎来吃',
+                    'creator': 
+                    {
+                        'user_id':1,
+                        'username':'admin',
+                        'email':'meishadia@gmail.com',
+                        'gender':'1',
+                        'phone':'18801734044',
+                        'location':'床上',
+                        'is_vip':0,
+                        'is_admin':0
+                    }
+                },
+                {
+                    'group_id':1,
+                    'name':u'吃奶子兴趣小组2',
+                    'brief':u'陈年马奶子，欢迎来吃',
+                    'creator': 
+                    {
+                        'user_id':2,
+                        'username':'admin2',
+                        'email':'meishadia@gmail.com',
+                        'gender':'1',
+                        'phone':'18801734044',
+                        'location':'床上',
+                        'is_vip':1,
+                        'is_admin':0
+                    }
+                },
+                {
+                    'group_id':1,
+                    'name':u'吃奶子兴趣小组3',
+                    'brief':u'陈年马奶子，欢迎来吃',
+                    'creator': 
+                    {
+                        'user_id':3,
+                        'username':'admin3',
+                        'email':'meishadia@gmail.com',
+                        'gender':'1',
+                        'phone':'18801734044',
+                        'location':'床上',
+                        'is_vip':0,
+                        'is_admin':1
+                    }
+                }])
+    elif url == "/groups/1/":
+        return codes.ok, s(
+                {
+                    'group_id':1,
+                    'name':u'吃奶子兴趣小组',
+                    'brief':u'陈年马奶子，欢迎来吃',
+                    'creator': 
+                    s({
+                        'user_id':1,
+                        'username':'admin',
+                        'email':'meishadia@gmail.com',
+                        'gender':'1',
+                        'phone':'18801734044',
+                        'location':'床上',
+                        'is_vip':0,
+                        'is_admin':0
+                    }),
+                    'members':s([
+                        {
+                            'user_id':1,
+                            'username':'admin',
+                            'email':'meishadia@gmail.com',
+                            'gender':'1',
+                            'phone':'18801734044',
+                            'location':'床上',
+                            'is_vip':0,
+                            'is_admin':0
+                        },
+                        {
+                            'user_id':2,
+                            'username':'loudan',
+                            'email':'meishadia@gmail.com',
+                            'gender':'1',
+                            'phone':'18801733943',
+                            'location':'不明',
+                            'is_vip':1,
+                            'is_admin':1
+                        },
+                        {
+                            'user_id':3,
+                            'username':'陈乃',
+                            'email':'cldtc@gmail.com',
+                            'gender':'1',
+                            'phone':'18801733333',
+                            'location':'床上',
+                            'is_vip':0,
+                            'is_admin':0
+                        },
+                        {
+                            'user_id':4,
+                            'username':'sb',
+                            'email':'meishadia@gmail.com',
+                            'gender':'1',
+                            'phone':'18801734044',
+                            'location':'床上',
+                            'is_vip':1,
+                            'is_admin':0
+                        }
+                    ])
+                })
     return 0, None
 
 def post(url, data={}, **kwargs):
@@ -165,6 +275,8 @@ def post(url, data={}, **kwargs):
     elif url == '/vips/1/0/' or url == '/vips/1/1/' or url == '/vips/1/2/':
         return codes.ok, s({})
     elif url == '/notifications/new/':
+        return codes.ok, s({})
+    elif url == '/groups/':
         return codes.ok, s({})
     return 0, None
 

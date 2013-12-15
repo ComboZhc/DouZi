@@ -29,3 +29,8 @@ class notification:
     class new:
         ok = u'发送通知成功'
         fail = u'发送通知失败'
+
+class group:
+    class new:
+        ok = u'创建小组成功'
+        fail = u'创建小组失败'
