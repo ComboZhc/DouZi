@@ -5,7 +5,7 @@ from client import s
 
 users = [s({
     'username':'ComboZhc',
-    'user_id':5,
+    'user_id':1,
     'email':'zhangchao6865@gmail.com',
     'gender':'m',
     'phone':'123456789',
@@ -150,15 +150,15 @@ def get(url, **kwargs):
                     'creator': u
                 },
                 {
-                    'group_id':1,
-                    'name':u'吃奶子兴趣小组2',
-                    'brief':u'陈年马奶子，欢迎来吃',
+                    'group_id':2,
+                    'name':u'读书小组',
+                    'brief':u'书是人类进步的阶梯',
                     'creator': u2
                 },
                 {
-                    'group_id':1,
-                    'name':u'吃奶子兴趣小组3',
-                    'brief':u'陈年马奶子，欢迎来吃',
+                    'group_id':3,
+                    'name':u'LOL小组',
+                    'brief':u'一起来玩吧',
                     'creator': u3
                 }
             ])
@@ -168,11 +168,11 @@ def get(url, **kwargs):
                     'group_id':1,
                     'name':u'吃奶子兴趣小组',
                     'brief':u'陈年马奶子，欢迎来吃',
-                    'creator':u3,
-                    'members':[u, u2,
+                    'creator':u,
+                    'members':[u, u2, u3,
                         {
                             'user_id':3,
-                            'username':'陈乃',
+                            'username':'陈叔叔',
                             'email':'cldtc@gmail.com',
                             'gender':'1',
                             'phone':'18801733333',
@@ -182,7 +182,7 @@ def get(url, **kwargs):
                         },
                         {
                             'user_id':4,
-                            'username':'sb',
+                            'username':'逗比',
                             'email':'meishadia@gmail.com',
                             'gender':'1',
                             'phone':'18801734044',
@@ -219,7 +219,7 @@ def post(url, data={}, **kwargs):
     if url == '/login/':
         if data.username == data.password:
             return codes.ok, s({
-                'user_id':1,
+                'user_id':1 if data.username == 'a' else 2,
                 'is_vip':1 if data.username == 'vip' else 0,
                 'is_banned':1 if data.username == 'ban' else 0,
                 'is_admin':1 if data.username == 'admin' else 0,
@@ -240,8 +240,6 @@ def post(url, data={}, **kwargs):
     elif url == '/groups/':
         return codes.created, s({'group_id':1})
     elif url == '/groups/1/requests/':
-        return codes.created, s({})
-    elif url == '/groups/1/requests/3/':
         return codes.created, s({})
     return 0, None
 

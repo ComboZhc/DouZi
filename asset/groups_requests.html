@@ -1,38 +1,29 @@
 $def with (requests)
-$var title:小组管理
-$var css:topic.css
+$var title:管理小组
+$var css:group.css
   $if not session.user:
     <div class="jumbotron">说说是一个话题发布平台
       <a class="btn btn-lg btn-success" href="/reg/" role="button">注册</a>
       <a class="btn btn-lg btn-info" href="/login/" role="button">登陆</a>
     </div>
-
-  <div class="row">
-  <div class="col-lg-1">
-  </div>
-  <div class="col-lg-10">
-    <table class="table">
-      <thead>
-          <th>申请者</th>
-          <th>申请小组</th>
-          <th></th>
-      </thead>
-      <tbody>
-          $for item in requests:
-            <tr>
-              <td>$item.username</td>
-              <td><a href="/groups/detail/$item.group_id/">$item.group_name</a></td>
-              <td><form method="post" action="/groups/$item.group_id/approve/$item.user_id/1/"><button type="submit">同意</button></form>
-                &nbsp;
-                <form method="post" action="/groups/$item.group_id/approve/$item.user_id/0/"><button type="submit">拒绝</button></form>
-              </td>
-            </tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="col-lg-1">
-  </div>
-  </div>
+  <table id="group-requests" class="table">
+    <thead>
+      <th>申请者</th>
+      <th>申请小组</th>
+      <th>操作</th>
+    </thead>
+    <tbody>
+      $for r in requests:
+      <tr>
+        <td>$r.username</td>
+        <td><a href="/groups/$r.group_id/">$r.group_name</a></td>
+        <td><form method="post" action="/groups/$r.group_id/approve/$r.user_id/1/"><button class="btn btn-xs btn-info" type="submit">同意</button></form>
+        &nbsp;
+        <form method="post" action="/groups/$r.group_id/approve/$r.user_id/0/"><button class="btn btn-xs btn-danger" type="submit">拒绝</button></form>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
   <div class="footer">
     <p>&copy; Company 2013</p>

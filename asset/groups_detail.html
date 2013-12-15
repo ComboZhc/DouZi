@@ -16,18 +16,13 @@ $var css:group.css
             </div>
             
             <div class="col-lg-2">
-            $if group.creator.user_id == session.user.user_id:
                 <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
                    操作 <span class="caret"></span>
                 </button>
-                <ul class="dropdown-menu" role="menu">
+                 <ul class="dropdown-menu" role="menu">
+                $if group.creator.user_id == session.user.user_id:
                     <li><form method="post" action="/groups/$group.group_id/delete/"><button type="submit">删除</button></form></li>
-                </ul>
-            $else:
-                <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
-                   操作 <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu">
+                $else:
                     $if is_ingroup(group):
                         <li><form method="post" action="/groups/$group.group_id/quit/"><button type="submit">退出</button></form></li>
                     $else:
@@ -35,7 +30,7 @@ $var css:group.css
                     $if is_admin():
                         <li><form method="post" action="/groups/$group.group_id/delete/"><button type="submit">删除</button></form></li>
                 </ul>
-            </div>
+                </div>
             </div>
         </div>
     
