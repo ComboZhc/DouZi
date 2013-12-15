@@ -33,6 +33,11 @@ urls = (
     r'/groups/list/?', 'GroupList',
     r'/groups/mylist/?', 'GroupMyList',
     r'/groups/detail/(\d+)/?', 'GroupDetail',
+    r'/groups/(\d+)/quit/?', 'GroupQuit',
+    r'/groups/(\d+)/delete/?', 'GroupQuit',
+    r'/groups/(\d+)/join/?', 'GroupJoin',
+    r'/groups/(\d+)/approve/(\d+)/(\d+)/?', 'GroupApprove',
+    r'/groups/requests/?', 'GroupRequests',
 )
 app = web.application(urls, globals())
 
@@ -77,6 +82,12 @@ def user():
 
 def is_admin():
     return session.user and session.user.is_admin == 1
+
+def is_ingroup(group):
+    for item in group.members:
+        if item.user_id == session.user.user_id:
+            return True
+    return False
 
 def is_vip():
     return session.user and session.user.is_vip == 1
@@ -451,6 +462,50 @@ class GroupDetail:
             return render.groups_detail(group=j)
 
         return web.notfound()
+
+class GroupJoin:
+    def POST(self, group_id):
+        i = {'user_id':session.user.user_id}
+        r, j = client.post('/groups/%i/requests/' % int(group_id), data=i)
+        if r == codes.created:
+            #send notifications!!!!
+            return web.redirect('/groups/detail/%i/' % int(group_id))
+
+        return web.notfound()
+
+class GroupQuit:
+    def POST(self, group_id):
+        i = {'user_id':session.user.user_id}
+        r, j = client.delete('/groups/%i/' % int(group_id), data=i)
+        if r == codes.accepted:
+            return web.redirect('/groups/list/')
+
+        return web.notfound()
+
+class GroupApprove:
+    def POST(self, group_id, user_id, is_approved):
+        i = {'user_id':session.user.user_id}
+        if is_approved == 1:
+            r, j = client.post('/groups/%i/requests/%i/' % (int(group_id),int(user_id)), data=i)
+            if r == codes.created:
+                return web.redirect('/groups/requests/')
+        elif is_approved == 0:
+            r, j = client.delete('/groups/%i/requests/%i/' % (int(group_id),int(user_id)), data=i)
+            if r == codes.accepted:
+                return web.redirect('/groups/requests/')
+
+        return web.notfound()
+
+class GroupRequests:
+    def GET(self):
+        render = web.template.render('asset', base='after.common', globals=globals())
+        r, j = client.get('/users/%i/groups/requests/' % session.user.user_id)
+        if r == codes.ok:
+            return render.groups_requests(requests=j)
+
+        return web.notfound()
+
+
 
 if __name__ == "__main__":
     app.run()
