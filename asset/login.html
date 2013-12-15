@@ -5,10 +5,6 @@ $var css:login.css
     <h2 class="form-signin-heading">登入说说，发现精彩</h2>
     <input type="text" class="form-control" placeholder="用户名" name="username" autofocus>
     <input type="password" class="form-control" placeholder="密码" name="password">
-    $if flash():
-      <div class="alert alert-warning">
-      $:flash(True)
-      </div>
     <button class="btn btn-lg btn-primary btn-block" type="submit">登入</button>
   </form>
 </div>

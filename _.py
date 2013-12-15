@@ -1,6 +1,7 @@
 #coding: utf-8
 class login:
-	fail = u'用户名或密码错误'
+    fail = u'用户名或密码错误'
+    ok = u'登陆成功'
 
 class reg:
     fail = u'注册信息错误'

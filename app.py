@@ -103,6 +103,7 @@ class Login:
         i = web.input()
         r, j = client.post('/login/', data=i)
         if r == codes.ok:
+            flash(_.login.ok)
             session.user = j
             session.username = i.username
             raise web.redirect("/")
@@ -309,6 +310,16 @@ class TopicComment:
         else:
             return web.notfound()
 
+class TopicCommentDelete:
+    def GET(self, topic_id, comment_id):
+        if not is_admin():
+            return web.notfound()
+        r, j = client.delete('/topics/%i/comments/%i/' % (int(topic_id), int(id)))
+        if r == codes.accepted:
+            raise web.redirect('/topics/%i/' % int(topic_id))
+        else:
+            return web.notfound()
+
 class BanList:
     def GET(self):
         if not is_admin():
@@ -370,6 +381,7 @@ class NotificationsNew:
         if not is_admin() and not is_vip():
             return web.notfound()
         i = web.input()
+        i.user_id = session.user.user_id
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.post('/notifications/new/', data=i)
         if r == codes.ok:
