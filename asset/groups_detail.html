@@ -21,16 +21,19 @@ $var css:group.css
                    操作 <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
-                   <li><a href="/groups/$group.group_id/delete/">删除</a></li>
+                    <li><form method="post" action="/groups/$group.group_id/delete/"><button type="submit">删除</button></form></li>
                 </ul>
             $else:
                 <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
                    操作 <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
-                    <li><a href="/groups/$group.group_id/quit/">退出</a></li>
+                    $if is_ingroup(group):
+                        <li><form method="post" action="/groups/$group.group_id/quit/"><button type="submit">退出</button></form></li>
+                    $else:
+                        <li><form method="post" action="/groups/$group.group_id/join/"><button type="submit">加入</button></form></li>
                     $if is_admin():
-                        <li><a href="/groups/$group.group_id/delete/">删除</a></li>
+                        <li><form method="post" action="/groups/$group.group_id/delete/"><button type="submit">删除</button></form></li>
                 </ul>
             </div>
             </div>

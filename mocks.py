@@ -5,7 +5,7 @@ from client import s
 
 users = [s({
     'username':'ComboZhc',
-    'user_id':1,
+    'user_id':5,
     'email':'zhangchao6865@gmail.com',
     'gender':'m',
     'phone':'123456789',
@@ -198,6 +198,20 @@ def get(url, **kwargs):
         return codes.ok, s([u3])
     elif url == '/users/3/friends/':
         return codes.ok, s([])
+    elif url == '/users/1/groups/requests/':
+        return codes.ok, s([
+            {
+                'user_id':2,
+                'group_name':'吃奶子俱乐部',
+                'username':'manaizi',
+                'group_id':1
+            },
+            {
+                'user_id':3,
+                'group_name':'吃奶子',
+                'username':'nitianwosha',
+                'group_id':2
+            }])
     return 0, None
 
 def post(url, data={}, **kwargs):
@@ -225,6 +239,10 @@ def post(url, data={}, **kwargs):
         return codes.created, s({})
     elif url == '/groups/':
         return codes.created, s({'group_id':1})
+    elif url == '/groups/1/requests/':
+        return codes.created, s({})
+    elif url == '/groups/1/requests/3/':
+        return codes.created, s({})
     return 0, None
 
 def put(url, data={}, **kwargs):
@@ -237,5 +255,7 @@ def put(url, data={}, **kwargs):
     
 def delete(url, data={}, **kwargs):
     if url == "/topics/1/comments/1/" or url == "/topics/1/comments/2/":
+        return codes.accepted, s({})
+    elif url == "/groups/1/":
         return codes.accepted, s({})
     return 0, None
