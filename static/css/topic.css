@@ -25,3 +25,10 @@
   width: 600px;
   margin: 0 auto;
 }
+.comment {
+  margin: 5px 0;
+  min-height: 22px;
+}
+.comment button {
+  margin: 0 2px;
+}

@@ -21,6 +21,7 @@ urls = (
     r'/topics/(\d+)/edit/?', 'TopicEdit',
     r'/topics/(\d+)/delete/?', 'TopicDelete',
     r'/topics/(\d+)/comments/?', 'TopicComment',
+    r'/topics/(\d+)/comments/(\d+)/delete/?', 'TopicCommentDelete',
     r'/bans/?', 'BanList',
     r'/vips/?', 'VipList',
     r'/vips/pending/?', 'VipPending',
@@ -65,6 +66,15 @@ def image_gender(gender):
         return '<img width="16" height="16" src="/static/img/male.png"/>'
     else:
         return '<img width="16" height="16" src="/static/img/female.png"/>'
+
+def is_admin():
+    return session.user and session.user.is_admin == 1
+
+def is_vip():
+    return session.user and session.user.is_vip == 1
+
+def is_pending():
+    return session.user and session.user.is_vip == 2
 
 class Home:
     def GET(self):
@@ -260,7 +270,8 @@ class TopicDelete:
             
 class TopicComment:
     def POST(self, id):
-        r, j = client.post('/topics/%i/comments/' % int(id))
+        i = web.input()
+        r, j = client.post('/topics/%i/comments/' % int(id), data=i)
         if r == codes.ok:
             raise web.redirect('/topics/%i/' % int(id));
         else:

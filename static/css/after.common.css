@@ -40,3 +40,7 @@ a:hover {
 .panel-title {
   font-weight: bold;
 }
+
+.dropdown-menu {
+  text-shadow: none;
+}

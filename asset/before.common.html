@@ -14,9 +14,6 @@ $def with (content)
     $if content.css:
       $for f in content.css.split():
         <link rel="stylesheet" href="/static/css/$f"/>
-    $if content.js:
-      $for f in content.js.split():
-        <link rel="javascript" type="text/javascript" href="/static/js/$f"/>
   </head>
   <body>
     $:content

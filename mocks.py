@@ -27,7 +27,7 @@ def get(url, **kwargs):
                 'creator':u,
                 'image_id':1,
                 'title':u'吃西瓜',
-                'content':u'吃吃拆此航次吃',
+                'content':u'吃吃吃吃吃吃吃吃吃吃吃吃吃吃吃',
                 'is_public':1,
             }, {
                 'topic_id':2,
@@ -40,7 +40,7 @@ def get(url, **kwargs):
                 'topic_id':3,
                 'creator':u,
                 'image_id':3,
-                'title':u'sbPJ撸个蛋啊',
+                'title':u'这PJ撸个蛋啊',
                 'content':u'sb滚粗',
                 'is_public':1,
             }, {
@@ -125,18 +125,20 @@ def get(url, **kwargs):
                 'creator':u,
                 'image_id':'1.jpg',
                 'title':u'吃西瓜',
-                'content':u'吃吃拆此航次吃',
+                'content':u'吃吃吃吃吃吃吃吃吃吃吃吃吃吃吃',
                 'is_public':1,
         })
     elif url == "/topics/1/comments/":
         return codes.ok, s([
                 {
+                    'comment_id':1,
                     'creator':u,
-                    'content':'lzsb',
+                    'content':'撸主挽尊',
                 },
                 {
+                    'comment_id':2,
                     'creator':u,
-                    'content':'lzsb',
+                    'content':'楼上',
                 }
             ])
     return 0, None
@@ -160,7 +162,7 @@ def post(url, data={}, **kwargs):
         return codes.created, s({'topic_id':1})
     elif url == '/topics/1/comments/':
         return codes.ok, s({})
-    elif url == '/vips/1/0/' or url == '/vips/1/1/' or url == url == '/vips/1/1/':
+    elif url == '/vips/1/0/' or url == '/vips/1/1/' or url == '/vips/1/2/':
         return codes.ok, s({})
     elif url == '/notifications/new/':
         return codes.ok, s({})
