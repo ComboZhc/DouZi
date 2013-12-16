@@ -29,6 +29,7 @@ urls = (
     r'/vips/(\d+)/(\d+)/?','VipSet',
     r'/bans/?', 'BanList',
     r'/notifications/new/?', 'NotificationsNew',
+    r'/notifications/?', 'Notifications',
     r'/groups/new/?', 'GroupNew',
     r'/groups/list/?', 'GroupList',
     r'/groups/my/?', 'GroupMy',
@@ -37,7 +38,7 @@ urls = (
     r'/groups/(\d+)/delete/?', 'GroupQuit',
     r'/groups/(\d+)/join/?', 'GroupJoin',
     r'/groups/(\d+)/approve/(\d+)/(\d+)/?', 'GroupApprove',
-    r'/groups/requests/?', 'GroupRequests'
+    r'/groups/requests/?', 'GroupRequests',
 )
 app = web.application(urls, globals())
 
@@ -476,7 +477,7 @@ class GroupJoin:
         r, j = client.post('/groups/%i/requests/' % int(group_id), data=i)
         if r == codes.created:
             #send notifications!!!!
-            return web.redirect('/groups/detail/%i/' % int(group_id))
+            return web.redirect('/groups/%i/' % int(group_id))
 
         return web.notfound()
 
@@ -512,7 +513,15 @@ class GroupRequests:
 
         return web.notfound()
 
+class Notifications:
+    def GET(self):
+        render = web.template.render('asset', base='after.common', globals=globals())
+        i = {'user_id':session.user.user_id}
+        r, j = client.get('/notifications/', data=i)
+        if r == codes.ok:
+            return render.notifications_list(notifications=j)
 
+        return web.notfound()
 
 if __name__ == "__main__":
     app.run()

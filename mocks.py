@@ -204,6 +204,54 @@ def get(url, **kwargs):
                 'username':'nitianwosha',
                 'group_id':2
             }])
+    elif url == '/notifications/':
+        return codes.ok, s([
+                {
+                    'notification_id':1,
+                    'title':'来加入马奶子小组吧',
+                    'content':'欢迎加入',
+                    'creator': 
+                    {
+                        'user_id':1,
+                        'username':'奶子',
+                        'email':'meishadia@gmail.com',
+                        'gender':'m',
+                        'phone':'1234567',
+                        'location':'shanghai',
+                        'is_vip':1
+                    }
+                },
+                {
+                    'notification_id':1,
+                    'title':'来加入马奶子小组吧',
+                    'content':'欢迎加入',
+                    'creator': 
+                    {
+                        'user_id':1,
+                        'username':'奶子',
+                        'email':'meishadia@gmail.com',
+                        'gender':'m',
+                        'phone':'1234567',
+                        'location':'shanghai',
+                        'is_vip':1
+                    }
+                },
+                {
+                    'notification_id':1,
+                    'title':'来加入马奶子小组吧',
+                    'content':'欢迎加入',
+                    'creator': 
+                    {
+                        'user_id':1,
+                        'username':'奶子',
+                        'email':'meishadia@gmail.com',
+                        'gender':'m',
+                        'phone':'1234567',
+                        'location':'shanghai',
+                        'is_vip':1
+                    }
+                }
+            ])
     return 0, None
 
 def post(url, data={}, **kwargs):
