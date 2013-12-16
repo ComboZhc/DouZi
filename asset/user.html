@@ -4,6 +4,10 @@ $var css:user.css
   <div id="user-detail" class="container-my clearfix">
       <div href="#" class="list-group-item active clearfix">
         $user.username $:image_gender(user.gender)
+        $if user.is_banned == 1:
+          (被封禁)
+        $if user.is_vip == 1:
+          (VIP)
         <button type="button" class="pull-right btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">操作<span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu">

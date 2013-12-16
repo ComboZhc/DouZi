@@ -1,13 +1,13 @@
-#group-detail.panel {
+#group-detail.panel, #group-requests {
   width: 600px;
+  margin: 0 auto;
+}
+
+#form-group-new {
+  width: 300px;
   margin: 0 auto;
 }
 
 #group-requests form{
   display: inline-block;
-}
-
-#group-requests {
-  max-width: 660px;
-  margin: 0 auto;
 }

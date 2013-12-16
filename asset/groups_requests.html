@@ -1,11 +1,6 @@
 $def with (requests)
 $var title:管理小组
 $var css:group.css
-  $if not session.user:
-    <div class="jumbotron">说说是一个话题发布平台
-      <a class="btn btn-lg btn-success" href="/reg/" role="button">注册</a>
-      <a class="btn btn-lg btn-info" href="/login/" role="button">登陆</a>
-    </div>
   <table id="group-requests" class="table">
     <thead>
       <th>申请者</th>

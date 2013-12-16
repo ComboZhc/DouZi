@@ -11,7 +11,7 @@ users = [s({
     'phone':'123456789',
     'description':u'人固有一死，或重于泰山，或轻于鸿毛',
     'location':u'上海',
-    'is_vip':0,
+    'is_vip':1,
     'is_banned':0,
     'is_admin':0,
     'is_public':1, 

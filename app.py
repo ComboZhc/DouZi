@@ -467,6 +467,7 @@ class GroupMy:
             return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.get('/users/%i/groups/' % int(session.user.user_id))
+        print '/users/%i/groups/' % int(session.user.user_id), j
         if r == codes.ok:
             return render.groups_list(groups_list=j)
         return web.notfound()
@@ -528,28 +529,32 @@ class GroupRequests:
 
 class Notifications:
     def GET(self):
+        if not user():
+            return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
         i = {'user_id':session.user.user_id}
         r, j = client.get('/notifications/', data=i)
         if r == codes.ok:
             return render.notifications_list(notifications=j)
-
         return web.notfound()
 
 class TopicRecommend:
     def GET(self, topic_id):
+        if not is_admin():
+            return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
         r, t = client.get('/topics/%i/' % int(topic_id))
         r, j = client.get('/users/%i/friends/' % session.user.user_id)
         if r == codes.ok:
             return render.topics_recommend(friends=j,topic=t)
-
         return web.notfound()
 
     def POST(self, topic_id):
+        if not is_admin():
+            return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
         i = web.input()
-        i.content += ('<a href="/topics/%i/">#' % int(i.topic_id)) + i.topic_title + '#</a>'
+        i.content += '<a href="/topics/%i/">#%s#</a>' % (int(i.topic_id), i.topic_title)
         i.user_id = session.user.user_id
         r, j = client.post('/notifications/new/', data=i)
         if r == codes.created:

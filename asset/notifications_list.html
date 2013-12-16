@@ -1,6 +1,6 @@
 $def with (notifications)
 $var title:通知列表
-$var css:topic.css
+$var css:notification.css
   $if not session.user:
     <div class="jumbotron">说说是一个话题发布平台
       <a class="btn btn-lg btn-success" href="/reg/" role="button">注册</a>
@@ -9,24 +9,26 @@ $var css:topic.css
 
   <div class="row">
   <div class="col-lg-12">
-          $for item in notifications:
-            <div class="row">
-              <div class="col-lg-3">
-                <div class="panel panel-success">
-                  <div class="panel-heading">
-                    <h3 class="panel-title">$item.title</h3>
-                  </div>
-                  <div class="panel-body">
-                    <p>
-                      $:item.content
-                    </p>
-                    <p class="text-right">
-                      发件人:<a href="/users/$item.creator.user_id/">$item.creator.username</a>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
+    $for item in notifications:
+      $if loop.index % 4 == 1:
+        <div class="row">
+      <div class="col-lg-3">
+        <div class="panel panel-success">
+          <div class="panel-heading">
+            <h3 class="panel-title">$item.title</h3>
+          </div>
+          <div class="panel-body">
+            <p>
+              $:item.content
+            </p>
+            <p class="text-right">
+              发件人:<a href="/users/$item.creator.user_id/">$item.creator.username</a>
+            </p>
+          </div>
+        </div>
+      </div>
+      $if loop.index % 4 == 0 or loop.last:
+        </div>
   </div>
   </div>
 
