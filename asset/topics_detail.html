@@ -45,7 +45,7 @@ $var css:topic.css
             <div class="col-lg-8">
                 <div class="container">
                     <div class="comment">
-                        <span class="comment-name">$topic.creator.username</span> 
+                        <a href="/users/$topic.creator.user_id/">$topic.creator.username</a> 
                         $:image_gender(topic.creator.gender)  
                         <span class="comment-content">: $topic.content</span>
                     </div>
@@ -53,7 +53,7 @@ $var css:topic.css
                 $for c in comments:
                     <div class="container">
                         <div class="comment" id="$c.comment_id">
-                            <span class="comment-name">$c.creator.username</span>
+                            <a href="/users/$c.creator.user_id/">$c.creator.username</a>
                             $:image_gender(c.creator.gender) 
                             <span class="comment-content">: $c.content</span>
                         </div>

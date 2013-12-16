@@ -2,3 +2,12 @@
   width: 600px;
   margin: 0 auto;
 }
+
+#group-requests form{
+  display: inline-block;
+}
+
+#group-requests {
+  max-width: 660px;
+  margin: 0 auto;
+}
