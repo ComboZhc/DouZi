@@ -1,0 +1,21 @@
+$def with(friends,topic)
+$var title:推荐好友话题
+$var css:topic.css
+  <form class="form-topic-new" action="/topics/$topic.topic_id/recommend/" method="post">
+    <div class="form-group">
+      <input type="text" class="form-control" placeholder="标题" name="title" autofocus>
+    </div>
+    <input type="hidden" name="topic_title" value="$topic.title"/>
+    <input type="hidden" name="topic_id" value="$topic.topic_id"/>
+    <div class="form-group">
+      <select type="text" class="form-control" placeholder="收件人ID(为空表示所有人)" name="receiver_id" autofocus>
+          <option selected="selected">好友列表</option>
+          $for item in friends:
+            <option value="$item.user_id">$item.username</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <textarea type="text" class="form-control" name="content" placeholder="内容">这个话题很有趣，你也来看看吧！</textarea>
+    </div>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">发布</button>
+  </form>
