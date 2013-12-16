@@ -23,10 +23,12 @@ urls = (
     r'/topics/(\d+)/delete/?', 'TopicDelete',
     r'/topics/(\d+)/comments/?', 'TopicComment',
     r'/topics/(\d+)/comments/(\d+)/delete/?', 'TopicCommentDelete',
+    r'/topics/(\d+)/recommend/?', 'TopicRecommend',
     r'/bans/?', 'BanList',
     r'/vips/?', 'VipList',
     r'/vips/pending/?', 'VipPending',
     r'/vips/(\d+)/(\d+)/?','VipSet',
+    r'/vips/ad/?', 'VipAD',
     r'/bans/?', 'BanList',
     r'/notifications/new/?', 'NotificationsNew',
     r'/notifications/?', 'Notifications',
@@ -400,12 +402,19 @@ class VipSet:
         flash(_.vip.set.fail)
         return web.redirect('/users/%i/' % int(id))
 
+class VipAD:
+    def GET(self):
+        if not is_admin() and not is_vip():
+            return web.notfound()
+        render = web.template.render('asset', base='after.common', globals=globals())
+        return render.notifications_new(title_id=2)
+
 class NotificationsNew:
     def GET(self):
         if not is_admin() and not is_vip():
             return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
-        return render.notifications_new()
+        return render.notifications_new(title_id=1)
 
     def POST(self):
         if not is_admin() and not is_vip():
@@ -526,6 +535,29 @@ class Notifications:
             return render.notifications_list(notifications=j)
 
         return web.notfound()
+
+class TopicRecommend:
+    def GET(self, topic_id):
+        render = web.template.render('asset', base='after.common', globals=globals())
+        r, t = client.get('/topics/%i/' % int(topic_id))
+        r, j = client.get('/users/%i/friends/' % session.user.user_id)
+        if r == codes.ok:
+            return render.topics_recommend(friends=j,topic=t)
+
+        return web.notfound()
+
+    def POST(self, topic_id):
+        render = web.template.render('asset', base='after.common', globals=globals())
+        i = web.input()
+        i.content += ('<a href="/topics/%i/">#' % int(i.topic_id)) + i.topic_title + '#</a>'
+        i.user_id = session.user.user_id
+        r, j = client.post('/notifications/new/', data=i)
+        if r == codes.created:
+            flash(_.notification.new.ok)
+            raise web.redirect('/topics/%i/recommend/' % int(i.topic_id))
+        else:
+            flash(_.notification.new.fail)
+            raise web.redirect('/topics/%i/recommend/' % int(i.topic_id))
 
 if __name__ == "__main__":
     app.run()

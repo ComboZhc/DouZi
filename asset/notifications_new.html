@@ -1,4 +1,5 @@
-$var title:发送通知
+$def with(title_id)
+$var title = "发送通知" if title_id == 1 else "发送广告"
 $var css:topic.css
   <form class="form-topic-new" enctype="multipart/form-data" action="/notifications/new/" method="post">
     <div class="form-group">

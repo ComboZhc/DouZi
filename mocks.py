@@ -216,8 +216,8 @@ def get(url, **kwargs):
         return codes.ok, s([
                 {
                     'notification_id':1,
-                    'title':'来加入马奶子小组吧',
-                    'content':'欢迎加入',
+                    'title':'看看这个话题',
+                    'content':'马奶子最喜欢吃什么啊？<a href="/topics/1/">#马奶子吃吃吃#</a>',
                     'creator': 
                     {
                         'user_id':1,
