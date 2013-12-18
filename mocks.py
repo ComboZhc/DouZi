@@ -4,6 +4,9 @@ import re
 from requests import codes
 from utils import storify
 
+class NotFoundException(Exception):
+    pass
+
 users = [{
     'user_id':0,
     'username':'admin',
@@ -105,7 +108,7 @@ def get_user_by_id(id):
     for u in users:
         if u and u['user_id'] == int(id):
             return u
-    raise
+    raise NotFoundException()
 
 def get_users_by_ids(ids):
     return [get_user_by_id(id) for id in ids]
@@ -118,7 +121,7 @@ def get_topic_by_id(id):
     for t in topics:
         if t and t['topic_id'] == int(id):
             return t
-    raise
+    raise NotFoundException()
 
 def update_by_key_int(a, b, key):
     if key in b:
@@ -141,6 +144,10 @@ def get(url, **kwargs):
         if re.match(r'^/users/(?P<id>\d+)/topics/$', url):
             id = int(re.match(r'^/users/(?P<id>\d+)/topics/$', url).group('id'))
             return codes.ok, filter(lambda t:t and t['creator_id'] == id, topics)
+        if re.match(r'^/users/(?P<id>\d+)/notifications/$', url):
+            id = int(re.match(r'^/users/(?P<id>\d+)/notifications/$', url).group('id'))
+            user = get_user_by_id(id)
+            return codes.ok, user['notifications']
         if url == "/bans/":
             return codes.ok, filter(lambda u:u and u['is_banned'] == 1, users)
         if url == "/vips/":
@@ -224,37 +231,7 @@ def get(url, **kwargs):
                     'username':'nitianwosha',
                     'group_id':2
                 }])
-        if url == '/notifications/':
-            return codes.ok, storify([
-                    {
-                        'notification_id':1,
-                        'title':'看看这个话题',
-                        'content':'马奶子最喜欢吃什么啊？<a href="/topics/1/">#马奶子吃吃吃#</a>',
-                        'creator': users[0]
-                    },
-                    {
-                        'notification_id':1,
-                        'title':'来加入马奶子小组吧',
-                        'content':'欢迎加入',
-                        'creator': users[0]
-                    },
-                    {
-                        'notification_id':1,
-                        'title':'来加入马奶子小组吧',
-                        'content':'欢迎加入',
-                        'creator': 
-                        {
-                            'user_id':1,
-                            'username':'奶子',
-                            'email':'meishadia@gmail.com',
-                            'gender':'m',
-                            'phone':'1234567',
-                            'location':'shanghai',
-                            'is_vip':1
-                        }
-                    }
-                ])
-    except:
+    except NotFoundException:
         return codes.bad, {}
     return 0, None
 
@@ -286,6 +263,7 @@ def post(url, data={}, **kwargs):
             users[-1]['notifications'] = []
             return codes.created, users[-1]
         if url == '/topics/':
+            # PUSH TO FRIENDS!!!!
             topics.append({})
             topics[-1]['topic_id'] = len(topics) - 1
             topics[-1]['creator_id'] = int(data['user_id'])
@@ -316,12 +294,26 @@ def post(url, data={}, **kwargs):
             topic['comments'][-1]['user_id'] = user['user_id']
             return codes.created, topic['comments'][-1]
         if url == '/notifications/new/':
-            return codes.created, storify({})
+            if data.get('receiver_id'):
+                user = get_user_by_id(int(data['receiver_id']))
+                user['notifications'].append({})
+                user['notifications'][-1]['user_id'] = int(data['user_id'])
+                user['notifications'][-1]['creator_id'] = int(data['user_id'])
+                user['notifications'][-1]['title'] = data['title']
+                user['notifications'][-1]['content'] = data['content']
+            else:
+                for user in users:
+                    user['notifications'].append({})
+                    user['notifications'][-1]['user_id'] = int(data['user_id'])
+                    user['notifications'][-1]['creator_id'] = int(data['user_id'])
+                    user['notifications'][-1]['title'] = data['title']
+                    user['notifications'][-1]['content'] = data['content']
+            return codes.created, {}
         if url == '/groups/':
             return codes.created, storify({'group_id':1})
         if url == '/groups/1/requests/':
             return codes.created, storify({})
-    except:
+    except NotFoundException:
         return codes.bad, {}
     return 0, None
 
@@ -351,7 +343,7 @@ def put(url, data={}, **kwargs):
             return codes.accepted, {}
         if url == '/vips/1/0/' or url == '/vips/1/1/' or url == '/vips/1/2/':
             return codes.ok, storify({})
-    except:
+    except NotFoundException:
         return codes.bad, {}
     return 0, None
 
@@ -387,6 +379,6 @@ def delete(url, data={}, **kwargs):
             return codes.bad, {}
         if url == "/groups/1/":
             return codes.accepted, storify({})
-    except:
+    except NotFoundException:
         return codes.bad, {}
     return 0, None

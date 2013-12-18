@@ -417,35 +417,35 @@ class VipSet:
 
 class VipAD:
     def GET(self):
-        if not is_admin() and not is_vip():
+        if not is_vip():
             return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
         return render.notifications_new(vipad=1)
 
     def POST(self):
-        if not is_admin() and not is_vip():
+        if not is_vip():
             return web.notfound()
         i = web.input()
         i.title = _.prefix.ad + i.title
         i.user_id = session.user.user_id
         render = web.template.render('asset', base='after.common', globals=globals())
-        r, j = client.post('/vips/ad/', data=i)
+        r, j = client.post('/notifications/new/', data=i)
         if r == codes.created:
-            flash(_.notification.new.ok)
+            flash(_.notification.ad.ok)
             raise web.redirect('/vips/ad/')
         else:
-            flash(_.notification.new.fail)
+            flash(_.notification.ad.fail)
             raise web.redirect('/vips/ad/')
 
 class NotificationsNew:
     def GET(self):
-        if not is_admin() and not is_vip():
+        if not is_admin():
             return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
         return render.notifications_new(vipad=0)
 
     def POST(self):
-        if not is_admin() and not is_vip():
+        if not is_admin():
             return web.notfound()
         i = web.input()
         i.user_id = session.user.user_id
@@ -560,8 +560,7 @@ class Notifications:
         if not user():
             return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
-        i = {'user_id':session.user.user_id}
-        r, j = client.get('/notifications/', data=i)
+        r, j = client.get('/users/%i/notifications/' % session.user.user_id)
         if r == codes.ok:
             return render.notifications_list(notifications=j)
         return web.notfound()
@@ -572,9 +571,9 @@ class TopicRecommend:
             return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
         r, t = client.get('/topics/%i/' % int(topic_id))
-        r, j = client.get('/users/%i/friends/' % session.user.user_id)
+        r, j = client.get('/users/')
         if r == codes.ok:
-            return render.topics_recommend(friends=j,topic=t)
+            return render.topics_recommend(users=j,topic=t)
         return web.notfound()
 
     def POST(self, topic_id):
@@ -586,11 +585,11 @@ class TopicRecommend:
         i.user_id = session.user.user_id
         r, j = client.post('/notifications/new/', data=i)
         if r == codes.created:
-            flash(_.notification.new.ok)
-            raise web.redirect('/topics/%i/recommend/' % int(i.topic_id))
+            flash(_.notification.recommend.ok)
+            raise web.redirect('/topics/%i/' % int(i.topic_id))
         else:
-            flash(_.notification.new.fail)
-            raise web.redirect('/topics/%i/recommend/' % int(i.topic_id))
+            flash(_.notification.recommend.fail)
+            raise web.redirect('/topics/%i/' % int(i.topic_id))
 
 if __name__ == "__main__":
     app.run()

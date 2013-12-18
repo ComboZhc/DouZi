@@ -1,7 +1,7 @@
-$def with(friends,topic)
+$def with(users,topic)
 $var title:推荐好友话题
 $var css:topic.css
-  <form class="form-topic-new" action="/topics/$topic.topic_id/recommend/" method="post">
+  <form id="form-topic-recommend" action="/topics/$topic.topic_id/recommend/" method="post">
     <div class="form-group">
       <input type="text" class="form-control" placeholder="标题" name="title" autofocus>
     </div>
@@ -9,8 +9,8 @@ $var css:topic.css
     <input type="hidden" name="topic_id" value="$topic.topic_id"/>
     <div class="form-group">
       <select type="text" class="form-control" placeholder="收件人ID(为空表示所有人)" name="receiver_id" autofocus>
-          <option selected="selected">好友列表</option>
-          $for item in friends:
+          <option value="" selected="selected">选择用户(此项表示所有人)</option>
+          $for item in users:
             <option value="$item.user_id">$item.username</option>
       </select>
     </div>

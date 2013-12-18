@@ -38,6 +38,12 @@ class notification:
     class new:
         ok = u'发送通知成功'
         fail = u'发送通知失败'
+    class recommend:
+        ok = u'推荐话题成功'
+        fail = u'推荐话题失败'
+    class ad:
+        ok = u'发送广告成功'
+        fail = u'发送广告失败'
 
 class group:
     class new:
