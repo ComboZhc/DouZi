@@ -35,3 +35,11 @@ def storify(mapping):
         return _storify(mapping)
     if isinstance(mapping, list):
         return [_storify(x) for x in mapping]
+
+def update_by_key_int(a, b, key):
+    if key in b:
+        a[key] = int(b[key])
+
+def update_by_key(a, b, key):
+    if key in b:
+        a[key] = b[key]

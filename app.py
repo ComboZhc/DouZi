@@ -169,7 +169,7 @@ class User:
         if r == codes.ok:
             r, f = client.get('/users/%i/friends/' % int(id))
             if r == codes.ok:
-                return render.user(user=j,friends=f)
+                return render.user(user=j, friends=f)
         return web.notfound()
 
 class UserEdit:
@@ -184,7 +184,10 @@ class UserEdit:
             return web.notfound()
     def POST(self, id):
         i = web.input()
+        print type(i)
         i.is_public = int('is_public' in i)
+        del i.old_password
+        del i.password2
         r, j = client.put('/users/%i/' % int(id), data=i)
         if r == codes.accepted:
             flash(_.user.edit.ok)
