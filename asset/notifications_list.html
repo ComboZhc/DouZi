@@ -22,7 +22,7 @@ $var css:notification.css
               $:item.content
             </p>
             <p class="text-right">
-              发件人:<a href="/users/$item.creator.user_id/">$item.creator.username</a>
+              发件人:<a href="/users/$item.creator_id/">$get_user(item.creator_id)</a>
             </p>
           </div>
         </div>

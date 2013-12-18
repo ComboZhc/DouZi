@@ -20,7 +20,7 @@ $var css:group.css
                    操作 <span class="caret"></span>
                 </button>
                  <ul class="dropdown-menu" role="menu">
-                $if group.creator.user_id == session.user.user_id:
+                $if group.creator_id == session.user.user_id:
                     <li><form method="post" action="/groups/$group.group_id/delete/"><button type="submit">删除</button></form></li>
                 $else:
                     $if is_ingroup(group):

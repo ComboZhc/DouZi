@@ -16,7 +16,7 @@ $var css:topic.css
             </div>
             
             <div class="col-lg-2">
-            $if topic.creator.user_id == session.user.user_id:
+            $if topic.user_id == session.user.user_id:
                 <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
                    操作 <span class="caret"></span>
                 </button>
@@ -44,19 +44,21 @@ $var css:topic.css
             <div class="col-lg-4">
                 <img class="topic-pic" src="/static/image/$topic.image_id" />
             </div>
+            $ user = get_user(topic.user_id)
             <div class="col-lg-8">
                 <div class="container">
                     <div class="comment">
-                        <a href="/users/$topic.creator.user_id/">$topic.creator.username</a> 
-                        $:image_gender(topic.creator.gender)  
+                        <a href="/users/$topic.user_id/">$user.username</a> 
+                        $:image_gender(user.gender)  
                         <span class="comment-content">: $topic.content</span>
                     </div>
                 </div>
                 $for c in comments:
+                    $ user = get_user(c.user_id)
                     <div class="container">
                         <div class="comment" id="$c.comment_id">
-                            <a href="/users/$c.creator.user_id/">$c.creator.username</a>
-                            $:image_gender(c.creator.gender) 
+                            <a href="/users/$c.creator_id/">$user.username</a>
+                            $:image_gender(user.gender)
                             <span class="comment-content">: $c.content</span>
                         </div>
                     </div>

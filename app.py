@@ -101,6 +101,11 @@ def is_pending():
 def is_banned():
     return session.user and session.user.is_banned == 1
 
+def get_user(id):
+    r, j = client.get('/users/%i/' % int(id))
+#    raise id
+    return j
+
 class Home:
     def GET(self):
         if session.user:
@@ -193,7 +198,7 @@ class UserFriend:
         if not user():
             return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
-        r, j = client.post('/users/%i/friends/' % user().user_id, data={'friend_id': int(id)})
+        r, j = client.post('/users/%i/friends/' % int(user().user_id), data={'friend_id': int(id)})
         if r == codes.created:
             flash(_.user.friend.ok)
             raise web.redirect('/users/%i/' % int(id))
@@ -338,6 +343,7 @@ class TopicComment:
         if not user():
             return web.notfound()
         i = web.input()
+        i.creator_id = session.user.user_id
         r, j = client.post('/topics/%i/comments/' % int(id), data=i)
         if r == codes.created:
             raise web.redirect('/topics/%i/' % int(id));
@@ -444,7 +450,7 @@ class GroupNew:
         i.user_id = session.user.user_id
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.post('/groups/', data=i)
-        if r == codes.created:
+        if r == codes.ok:
             flash(_.group.new.ok)
             raise web.redirect('/groups/%i/' % int(j.group_id))
         else:
@@ -457,6 +463,7 @@ class GroupList:
             return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.get('/groups/')
+        raise j
         if r == codes.ok:
             return render.groups_list(groups_list=j)
         return web.notfound()
