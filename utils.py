@@ -20,6 +20,10 @@ class Storage(dict):
         return '<Storage ' + dict.__repr__(self) + '>'
 
 def _storify(mapping):
+    if mapping is None:
+        return None
+    if isinstance(mapping, int) or isinstance(mapping, str):
+        return mapping
     stor = Storage()
     for key in mapping.keys():
         value = mapping[key]
@@ -35,11 +39,3 @@ def storify(mapping):
         return _storify(mapping)
     if isinstance(mapping, list):
         return [_storify(x) for x in mapping]
-
-def update_by_key_int(a, b, key):
-    if key in b:
-        a[key] = int(b[key])
-
-def update_by_key(a, b, key):
-    if key in b:
-        a[key] = b[key]

@@ -6,7 +6,7 @@ $var css:topic.css
       <a class="btn btn-lg btn-success" href="/reg/" role="button">注册</a>
       <a class="btn btn-lg btn-info" href="/login/" role="button">登陆</a>
     </div>
-  <form class="form-topic-new" enctype="multipart/form-data" action="/topics/$topic.topic_id/edit/" method="post">
+  <form id="form-topic-edit" enctype="multipart/form-data" action="/topics/$topic.topic_id/edit/" method="post">
     <div class="form-group">
 		<input name="title" class="form-control"  placeholder="标题" value="$topic.title" />
 	</div>

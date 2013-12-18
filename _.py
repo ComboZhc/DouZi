@@ -43,3 +43,7 @@ class group:
     class new:
         ok = u'创建小组成功'
         fail = u'创建小组失败'
+
+class prefix:
+    ad = u'[广告]'
+    recommend = u'[推荐话题]'

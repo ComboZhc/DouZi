@@ -2,7 +2,7 @@
 import json
 import re
 from requests import codes
-from utils import update_by_key, update_by_key_int, storify
+from utils import storify
 
 users = [{
     'user_id':0,
@@ -17,6 +17,8 @@ users = [{
     'is_banned':0,
     'is_admin':1,
     'is_public':1, 
+    'friends': [1],
+    'notifications': [],
 }, {
     'user_id':1,
     'username':'vip',
@@ -30,6 +32,8 @@ users = [{
     'is_banned':0,
     'is_admin':0,
     'is_public':1, 
+    'friends': [0],
+    'notifications': [],
 }, {
     'user_id':2,
     'username':'ban',
@@ -43,6 +47,8 @@ users = [{
     'is_banned':1,
     'is_admin':0,
     'is_public':1, 
+    'friends': [2, 3],
+    'notifications': [],
 }, {
     'user_id':3,
     'username':'private',
@@ -56,6 +62,8 @@ users = [{
     'is_banned':0,
     'is_admin':0,
     'is_public':0, 
+    'friends': [3],
+    'notifications': [],
 }, {
     'user_id':4,
     'username':'user',
@@ -69,281 +77,316 @@ users = [{
     'is_banned':0,
     'is_admin':0,
     'is_public':1,
+    'friends': [0],
+    'notifications': [],
 }]
 
-friends = [
-    [users[1]],
-    [users[2], users[3]],
-    [users[3]],
-    [users[0]],
-    [users[0]],
-]
+topics = [{
+    'topic_id':0,
+    'image_id':'1.jpg',
+    'title':u'一个公开的话题',
+    'content':u'这是一个公开的话题',
+    'is_public':1,
+    'creator_id':users[0]['user_id'],
+    'user_id':users[0]['user_id'],
+    'comments':[],
+},{
+    'topic_id':1,
+    'image_id':'2.jpg',
+    'title':u'一个私密的话题',
+    'content':u'这是一个私密的话题',
+    'is_public':0,
+    'creator_id':users[4]['user_id'],
+    'user_id':users[4]['user_id'],
+    'comments':[],
+}]
+
+def get_user_by_id(id):
+    for u in users:
+        if u and u['user_id'] == int(id):
+            return u
+    raise
+
+def get_users_by_ids(ids):
+    return [get_user_by_id(id) for id in ids]
+
+def get_friends_by_id(id):
+    user = get_user_by_id(id)
+    return get_users_by_ids(user['friends'])
+
+def get_topic_by_id(id):
+    for t in topics:
+        if t and t['topic_id'] == int(id):
+            return t
+    raise
+
+def update_by_key_int(a, b, key):
+    if key in b:
+        a[key] = int(b[key])
+
+def update_by_key(a, b, key):
+    if key in b:
+        a[key] = b[key]
 
 def get(url, **kwargs):
-    if re.match(r'^/users/(?P<id>\d+)/$', url):
-        i = int(re.match(r'^/users/(?P<id>\d+)/$', url).group('id'))
-        if i < len(users):
-            return codes.ok, users[i]
-        else:
-            return codes.bad, {}
-    elif re.match(r'^/users/(?P<id>\d+)/friends/$', url):
-        i = int(re.match(r'^/users/(?P<id>\d+)/friends/$', url).group('id'))
-        if i < len(friends):
-            return codes.ok, friends[i]
-        else:
-            return codes.bad, {}
-    elif url == "/topics/" or url == "/users/1/topics/" or url == "/topics/hot/":
-        return codes.ok, storify(
-            [{
-                'topic_id':1,
-                'creator':users[0],
-                'image_id':1,
-                'title':u'吃西瓜',
-                'content':u'吃吃吃吃吃吃吃吃吃吃吃吃吃吃吃',
-                'is_public':1,
-            }, {
-                'topic_id':2,
-                'creator':users[1],
-                'image_id':2,
-                'title':u'还有比奶子更丧的么',
-                'content':u'RT',
-                'is_public':1,
-            }, {
-                'topic_id':3,
-                'creator':users[1],
-                'image_id':3,
-                'title':u'这PJ撸个蛋啊',
-                'content':u'sb滚粗',
-                'is_public':1,
-            }, {
-                'topic_id':4,
-                'creator':users[2],
-                'image_id':4,
-                'title':u'垃圾游戏，怒删',
-                'content':u'天凤就是个垃圾游戏，不服来辩',
-                'is_public':1,
-            }])
-    elif url == "/users/":
-        return codes.ok, users
-    elif url == "/bans/" or url == "/vips/" or url == "/vips/pending/":
-        return codes.ok, storify(
-            [u,users[1],users[2],{
-                "username":"Yuehan Xu",
-                "user_id":"4",
-                "email":"admin@localhost",
-                "gender":"f",
-                "phone":"1234567890",
-                "location":"Tokyo",
-                "is_vip":"1",
-                "is_banned":"0",
-                "is_admin":"1",
-                "is_public":"0"
-            },{
-                "username":"Li Xiao",
-                "user_id":"5",
-                "email":"xiaoli@localhost",
-                "gender":"f",
-                "phone":"12345",
-                "location":"Universe",
-                "is_vip":"1",
-                "is_banned":"0",
-                "is_admin":"1",
-                "is_public":"1"
-            },{"username":"Xiao Li",
-                "user_id":"7",
-                "email":"lixiao@localhost",
-                "gender":"m",
-                "phone":"12453",
-                "location":"China",
-                "is_vip":"1",
-                "is_banned":"0",
-                "is_admin":"1",
-                "is_public":"1"
-            }])
-    elif url == "/topics/1/" or url == "/topics/2/" or url == "/topics/3/" or url == "/topics/4/":
-        return codes.ok, storify({
-                'topic_id':1,
-                'creator':u,
-                'image_id':'1.jpg',
-                'title':u'吃西瓜',
-                'content':u'吃吃吃吃吃吃吃吃吃吃吃吃吃吃吃',
-                'is_public':1,
-        })
-    elif url == "/topics/1/comments/" or url == "/topics/2/comments/" or url == "/topics/3/comments/" or url == "/topics/4/comments/":
-        return codes.ok, storify([
-                {
-                    'comment_id':1,
-                    'creator':u,
-                    'content':'撸主挽尊',
-                },
-                {
-                    'comment_id':2,
-                    'creator':u,
-                    'content':'楼上',
-                }
-            ])
-    elif url == "/groups/" or url == "/users/1/groups/":
-        return codes.ok, storify([
-                {
-                    'group_id':1,
-                    'name':u'吃奶子兴趣小组',
-                    'brief':u'陈年马奶子，欢迎来吃',
-                    'creator': u
-                },
-                {
-                    'group_id':2,
-                    'name':u'读书小组',
-                    'brief':u'书是人类进步的阶梯',
-                    'creator': users[1]
-                },
-                {
-                    'group_id':3,
-                    'name':u'LOL小组',
-                    'brief':u'一起来玩吧',
-                    'creator': users[2]
-                }
-            ])
-    elif url == "/groups/1/":
-        return codes.ok, storify(
-                {
-                    'group_id':1,
-                    'name':u'吃奶子兴趣小组',
-                    'brief':u'陈年马奶子，欢迎来吃',
-                    'creator':u,
-                    'members':[u, users[1], users[2],
-                        {
-                            'user_id':3,
-                            'username':'陈叔叔',
-                            'email':'cldtc@gmail.com',
-                            'gender':'1',
-                            'phone':'18801733333',
-                            'location':'床上',
-                            'is_vip':0,
-                            'is_admin':0
-                        },
-                        {
-                            'user_id':4,
-                            'username':'逗比',
-                            'email':'meishadia@gmail.com',
-                            'gender':'1',
-                            'phone':'18801734044',
-                            'location':'床上',
-                            'is_vip':1,
-                            'is_admin':0
-                        }
-                    ]
-                })
-    elif url == '/users/1/groups/requests/':
-        return codes.ok, storify([
-            {
-                'user_id':2,
-                'group_name':'吃奶子俱乐部',
-                'username':'manaizi',
-                'group_id':1
-            },
-            {
-                'user_id':3,
-                'group_name':'吃奶子',
-                'username':'nitianwosha',
-                'group_id':2
-            }])
-    elif url == '/notifications/':
-        return codes.ok, storify([
-                {
-                    'notification_id':1,
-                    'title':'看看这个话题',
-                    'content':'马奶子最喜欢吃什么啊？<a href="/topics/1/">#马奶子吃吃吃#</a>',
-                    'creator': users[0]
-                },
-                {
-                    'notification_id':1,
-                    'title':'来加入马奶子小组吧',
-                    'content':'欢迎加入',
-                    'creator': users[0]
-                },
-                {
-                    'notification_id':1,
-                    'title':'来加入马奶子小组吧',
-                    'content':'欢迎加入',
-                    'creator': 
+    try:
+        if url == "/users/":
+            return codes.ok, filter(lambda u:u, users)
+        if re.match(r'^/users/(?P<id>\d+)/$', url):
+            id = int(re.match(r'^/users/(?P<id>\d+)/$', url).group('id'))
+            return codes.ok, get_user_by_id(id)
+        if re.match(r'^/users/(?P<id>\d+)/friends/$', url):
+            id = int(re.match(r'^/users/(?P<id>\d+)/friends/$', url).group('id'))
+            return codes.ok, get_friends_by_id(id)
+        if re.match(r'^/users/(?P<id>\d+)/topics/$', url):
+            id = int(re.match(r'^/users/(?P<id>\d+)/topics/$', url).group('id'))
+            return codes.ok, filter(lambda t:t and t['creator_id'] == id, topics)
+        if url == "/bans/":
+            return codes.ok, filter(lambda u:u and u['is_banned'] == 1, users)
+        if url == "/vips/":
+            return codes.ok, filter(lambda u:u and u['is_vip'] == 1, users)
+        if url == "/vips/pending/":
+            return codes.ok, filter(lambda u:u and u['is_vip'] == 2, users)
+        if url == "/topics/":
+            return codes.ok, filter(lambda t:t, topics)
+        if url == "/topics/hot/":
+            hot_topics = filter(lambda t:t, topics)
+            hot_topics.sort(lambda a, b: len(a['comments']) - len(b['comments']))
+            return codes.ok, hot_topics
+        if re.match(r'^/topics/(?P<id>\d+)/$', url):
+            id = int(re.match(r'^/topics/(?P<id>\d+)/$', url).group('id'))
+            return codes.ok, get_topic_by_id(id)
+        if re.match(r'^/topics/(?P<id>\d+)/comments/$', url):
+            id = int(re.match(r'^/topics/(?P<id>\d+)/comments/$', url).group('id'))
+            return codes.ok, filter(lambda c:c, get_topic_by_id(id)['comments'])
+        if url == "/groups/" or url == "/users/1/groups/":
+            return codes.ok, storify([
                     {
-                        'user_id':1,
-                        'username':'奶子',
-                        'email':'meishadia@gmail.com',
-                        'gender':'m',
-                        'phone':'1234567',
-                        'location':'shanghai',
-                        'is_vip':1
+                        'group_id':1,
+                        'name':u'吃奶子兴趣小组',
+                        'brief':u'陈年马奶子，欢迎来吃',
+                        'creator': u
+                    },
+                    {
+                        'group_id':2,
+                        'name':u'读书小组',
+                        'brief':u'书是人类进步的阶梯',
+                        'creator': users[1]
+                    },
+                    {
+                        'group_id':3,
+                        'name':u'LOL小组',
+                        'brief':u'一起来玩吧',
+                        'creator': users[2]
                     }
-                }
-            ])
+                ])
+        if url == "/groups/1/":
+            return codes.ok, storify(
+                    {
+                        'group_id':1,
+                        'name':u'吃奶子兴趣小组',
+                        'brief':u'陈年马奶子，欢迎来吃',
+                        'creator':u,
+                        'members':[u, users[1], users[2],
+                            {
+                                'user_id':3,
+                                'username':'陈叔叔',
+                                'email':'cldtc@gmail.com',
+                                'gender':'1',
+                                'phone':'18801733333',
+                                'location':'床上',
+                                'is_vip':0,
+                                'is_admin':0
+                            },
+                            {
+                                'user_id':4,
+                                'username':'逗比',
+                                'email':'meishadia@gmail.com',
+                                'gender':'1',
+                                'phone':'18801734044',
+                                'location':'床上',
+                                'is_vip':1,
+                                'is_admin':0
+                            }
+                        ]
+                    })
+        if url == '/users/1/groups/requests/':
+            return codes.ok, storify([
+                {
+                    'user_id':2,
+                    'group_name':'吃奶子俱乐部',
+                    'username':'manaizi',
+                    'group_id':1
+                },
+                {
+                    'user_id':3,
+                    'group_name':'吃奶子',
+                    'username':'nitianwosha',
+                    'group_id':2
+                }])
+        if url == '/notifications/':
+            return codes.ok, storify([
+                    {
+                        'notification_id':1,
+                        'title':'看看这个话题',
+                        'content':'马奶子最喜欢吃什么啊？<a href="/topics/1/">#马奶子吃吃吃#</a>',
+                        'creator': users[0]
+                    },
+                    {
+                        'notification_id':1,
+                        'title':'来加入马奶子小组吧',
+                        'content':'欢迎加入',
+                        'creator': users[0]
+                    },
+                    {
+                        'notification_id':1,
+                        'title':'来加入马奶子小组吧',
+                        'content':'欢迎加入',
+                        'creator': 
+                        {
+                            'user_id':1,
+                            'username':'奶子',
+                            'email':'meishadia@gmail.com',
+                            'gender':'m',
+                            'phone':'1234567',
+                            'location':'shanghai',
+                            'is_vip':1
+                        }
+                    }
+                ])
+    except:
+        return codes.bad, {}
     return 0, None
 
 def post(url, data={}, **kwargs):
-    if url == '/login/':
-        for u in users:
-            if u['username'] == data['username'] and u['password'] == data['password']:
-                return codes.ok, u
-        return codes.unauthorized, {}
-    elif url == '/users/':
-        for u in users:
-            if u['username'] == data['username']:
-                return codes.bad, {}
-        users.append({})
-        friends.append([])
-        users[-1]['user_id'] = len(users) - 1
-        users[-1]['username'] = data['username']
-        users[-1]['password'] = data['password']
-        users[-1]['email'] = data['email']
-        users[-1]['gender'] = data['gender']
-        users[-1]['phone'] = data['phone']
-        users[-1]['location'] = data['location']
-        users[-1]['description'] = data['description']
-        users[-1]['is_admin'] = int(data['is_admin'])
-        users[-1]['is_vip'] = 0
-        users[-1]['is_banned'] = 0
-        users[-1]['is_public'] = int(data['is_public'])
-        return codes.created, len(users) - 1
-    elif url == '/topics/':
-        return codes.created, storify({'topic_id':1})
-    elif url == '/topics/1/comments/':
-        return codes.created, storify({})
-    elif url == '/users/1/friends/' or url == '/users/2/friends/':
-        return codes.created, storify({})
-    elif url == '/notifications/new/':
-        return codes.created, storify({})
-    elif url == '/groups/':
-        return codes.created, storify({'group_id':1})
-    elif url == '/groups/1/requests/':
-        return codes.created, storify({})
+    try:
+        if url == '/login/':
+            for u in users:
+                if u and u['username'] == data['username'] and u['password'] == data['password']:
+                    return codes.ok, u
+            return codes.unauthorized, {}
+        if url == '/users/':
+            for u in users:
+                if u and u['username'] == data['username']:
+                    return codes.bad, {}
+            users.append({})
+            users[-1]['user_id'] = len(users) - 1
+            users[-1]['username'] = data['username']
+            users[-1]['password'] = data['password']
+            users[-1]['email'] = data['email']
+            users[-1]['gender'] = data['gender']
+            users[-1]['phone'] = data['phone']
+            users[-1]['location'] = data['location']
+            users[-1]['description'] = data['description']
+            users[-1]['is_admin'] = int(data['is_admin'])
+            users[-1]['is_vip'] = 0
+            users[-1]['is_banned'] = 0
+            users[-1]['is_public'] = int(data['is_public'])
+            users[-1]['friends'] = []
+            users[-1]['notifications'] = []
+            return codes.created, users[-1]
+        if url == '/topics/':
+            topics.append({})
+            topics[-1]['topic_id'] = len(topics) - 1
+            topics[-1]['creator_id'] = int(data['user_id'])
+            topics[-1]['user_id'] = int(data['user_id'])
+            topics[-1]['image_id'] = data['image_id']
+            topics[-1]['title'] = data['title']
+            topics[-1]['content'] = data['content']
+            topics[-1]['is_public'] = int(data['is_public'])
+            topics[-1]['comments'] = []
+            return codes.created, topics[-1]
+        if re.match(r"^/users/(?P<id>\d+)/friends/$", url):
+            id = int(re.match(r"^/users/(?P<id>\d+)/friends/$", url).group('id'))
+            fid = int(data['friend_id'])
+            user = get_user_by_id(id)
+            for f in user['friends']:
+                if f == fid:
+                    return codes.bad, {}
+            user['friends'].append(fid)
+            return codes.created, {}
+        if re.match(r'^/topics/(?P<id>\d+)/comments/$', url):
+            id = int(re.match(r'^/topics/(?P<id>\d+)/comments/$', url).group('id'))
+            topic = get_topic_by_id(id)
+            user = get_user_by_id(int(data['creator_id']))
+            topic['comments'].append({})
+            topic['comments'][-1]['comment_id'] = len(topic['comments']) -1
+            topic['comments'][-1]['content'] = data['content']
+            topic['comments'][-1]['creator_id'] = user['user_id']
+            topic['comments'][-1]['user_id'] = user['user_id']
+            return codes.created, topic['comments'][-1]
+        if url == '/notifications/new/':
+            return codes.created, storify({})
+        if url == '/groups/':
+            return codes.created, storify({'group_id':1})
+        if url == '/groups/1/requests/':
+            return codes.created, storify({})
+    except:
+        return codes.bad, {}
     return 0, None
 
 def put(url, data={}, **kwargs):
-    if re.match(r"^/users/(?P<id>\d+)/$", url):
-        i = int(re.match(r"^/users/(?P<id>\d+)/$", url).group('id'))
-        if i < len(users):
-            update_by_key(users[i], data, 'username')
-            update_by_key(users[i], data, 'password')
-            update_by_key(users[i], data, 'email')
-            update_by_key(users[i], data, 'gender')
-            update_by_key(users[i], data, 'phone')
-            update_by_key(users[i], data, 'location')
-            update_by_key(users[i], data, 'description')
-            update_by_key_int(users[i], data, 'is_admin')
-            update_by_key_int(users[i], data, 'is_vip')
-            update_by_key_int(users[i], data, 'is_banned')
-            update_by_key_int(users[i], data, 'is_public')
+    try:
+        if re.match(r"^/users/(?P<id>\d+)/$", url):
+            id = int(re.match(r"^/users/(?P<id>\d+)/$", url).group('id'))
+            user = get_user_by_id(id)
+            update_by_key(user, data, 'username')
+            update_by_key(user, data, 'password')
+            update_by_key(user, data, 'email')
+            update_by_key(user, data, 'gender')
+            update_by_key(user, data, 'phone')
+            update_by_key(user, data, 'location')
+            update_by_key(user, data, 'description')
+            update_by_key_int(user, data, 'is_admin')
+            update_by_key_int(user, data, 'is_vip')
+            update_by_key_int(user, data, 'is_banned')
+            update_by_key_int(user, data, 'is_public')
             return codes.accepted, {}
-        else:
-            return codes.bad, {}
-    elif url == '/vips/1/0/' or url == '/vips/1/1/' or url == '/vips/1/2/':
-        return codes.ok, storify({})
+        if re.match(r'^/topics/(?P<id>\d+)/$', url):
+            id = int(re.match(r'^/topics/(?P<id>\d+)/$', url).group('id'))
+            topic = get_topic_by_id(id)
+            update_by_key(topic, data, 'title')
+            update_by_key(topic, data, 'content')
+            update_by_key(topic, data, 'image_id')
+            return codes.accepted, {}
+        if url == '/vips/1/0/' or url == '/vips/1/1/' or url == '/vips/1/2/':
+            return codes.ok, storify({})
+    except:
+        return codes.bad, {}
     return 0, None
 
     
 def delete(url, data={}, **kwargs):
-    if url == "/topics/1/comments/1/" or url == "/topics/1/comments/2/":
-        return codes.accepted, storify({})
-    elif url == "/groups/1/":
-        return codes.accepted, storify({})
+    try:
+        if re.match(r"^/users/(?P<id>\d+)/friends/(?P<fid>\d+)/$", url):
+            r = re.match(r"^/users/(?P<id>\d+)/friends/(?P<fid>\d+)/$", url)
+            id = int(r.group('id'))
+            fid = int(r.group('fid'))
+            user = get_user_by_id(id)
+            for j in range(len(user['friends'])):
+                if user['friends'][j] == fid:
+                    del friends['friends'][j]
+                    return codes.accepted, {}
+            return codes.bad, {}
+        if re.match(r'^/topics/(?P<id>\d+)/$', url):
+            id = int(re.match(r'^/topics/(?P<id>\d+)/$', url).group('id'))
+            for j in range(len(topics)):
+                if topics[j] and topics[j]['topic_id'] == id:
+                    topics[j] = None
+                    return codes.accepted, {}
+            return codes.bad, {}
+        if re.match(r"^/topics/(?P<id>\d+)/comments/(?P<cid>\d+)/$", url):
+            r = re.match(r"^/topics/(?P<id>\d+)/comments/(?P<cid>\d+)/$", url)
+            id = int(r.group('id'))
+            cid = int(r.group('cid'))
+            topic = get_topic_by_id(id)
+            for j in range(len(topic['comments'])):
+                if topic['comments'][j] and topic['comments'][j]['comment_id'] == cid:
+                    topic['comments'][j] = None
+                    return codes.accepted, {}
+            return codes.bad, {}
+        if url == "/groups/1/":
+            return codes.accepted, storify({})
+    except:
+        return codes.bad, {}
     return 0, None

@@ -38,8 +38,9 @@ $def with (content)
                   <li><a href="/">话题列表</a></li>
                   $if session.user:
                     <li><a href="/topics/my/">我的话题</a></li>
-                    <li class="divider"></li>
-                    <li><a href="/topics/new/">创建话题</a></li>
+                    $if not is_banned():
+                      <li class="divider"></li>
+                      <li><a href="/topics/new/">创建话题</a></li>
                 </ul>
               </li>
               <li class="dropdown">
@@ -48,9 +49,10 @@ $def with (content)
                   <li><a href="/groups/">小组列表</a></li>
                   $if session.user:
                     <li><a href="/groups/my/">我的小组</a></li>
-                    <li class="divider"></li>
-                    <li><a href="/groups/requests/">管理小组</a></li>
-                    <li><a href="/groups/new/">创建小组</a></li>
+                    $if not is_banned():
+                      <li class="divider"></li>
+                      <li><a href="/groups/requests/">管理小组</a></li>
+                      <li><a href="/groups/new/">创建小组</a></li>
                 </ul>
               </li>
               <li><a href="/users/">用户列表</a></li>

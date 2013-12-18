@@ -229,6 +229,8 @@ class TopicList:
     def GET(self):
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.get('/topics/')
+        if not is_admin():
+            j = filter(lambda t: t.is_public, j)
         if r == codes.ok:
             return render.topics_list(topics=j)
         return web.notfound()
@@ -317,11 +319,12 @@ class TopicEdit:
         i = web.input(image={})
         i.user_id = session.user.user_id
         i.is_public = int('is_public' in i)
-        i.image_id = os.urandom(16).encode('hex') + os.path.splitext(i.image.filename)[1];
-        f = open(image_path(i.image_id), 'wb')
-        f.write(i.image.file.read())
-        f.close()
-        del i.image
+        if i.image.filename:
+            i.image_id = os.urandom(16).encode('hex') + os.path.splitext(i.image.filename)[1];
+            f = open(image_path(i.image_id), 'wb')
+            f.write(i.image.file.read())
+            f.close()
+            del i.image
         r, j = client.put('/topics/%i/' % int(id), data=i)
         if r == codes.accepted:
             flash(_.topic.edit.ok)
@@ -331,12 +334,13 @@ class TopicEdit:
             return web.redirect('/topics/%i/edit/' % int(id))
     
 class TopicDelete:
-    def GET(self, id):
+    def POST(self, id):
         if not user():
             return web.notfound()
+        print 'hi'
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.delete('/topics/%i/' % int(id))
-        if r == codes.ok:
+        if r == codes.accepted:
             raise web.redirect('/topics/');
         else:
             return web.notfound()
@@ -416,14 +420,29 @@ class VipAD:
         if not is_admin() and not is_vip():
             return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
-        return render.notifications_new(title_id=2)
+        return render.notifications_new(vipad=1)
+
+    def POST(self):
+        if not is_admin() and not is_vip():
+            return web.notfound()
+        i = web.input()
+        i.title = _.prefix.ad + i.title
+        i.user_id = session.user.user_id
+        render = web.template.render('asset', base='after.common', globals=globals())
+        r, j = client.post('/vips/ad/', data=i)
+        if r == codes.created:
+            flash(_.notification.new.ok)
+            raise web.redirect('/vips/ad/')
+        else:
+            flash(_.notification.new.fail)
+            raise web.redirect('/vips/ad/')
 
 class NotificationsNew:
     def GET(self):
         if not is_admin() and not is_vip():
             return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
-        return render.notifications_new(title_id=1)
+        return render.notifications_new(vipad=0)
 
     def POST(self):
         if not is_admin() and not is_vip():
@@ -441,7 +460,7 @@ class NotificationsNew:
 
 class GroupNew:
     def GET(self):
-        if not user():
+        if not user() or is_banned():
             return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
         return render.groups_new()
@@ -466,7 +485,6 @@ class GroupList:
             return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.get('/groups/')
-        raise j
         if r == codes.ok:
             return render.groups_list(groups_list=j)
         return web.notfound()
