@@ -67,8 +67,9 @@ users = [{
     'is_public':0, 
     'friends': [3],
     'notifications': [],
-}, {
-    'user_id':4,
+}, None,
+{
+    'user_id':5,
     'username':'user',
     'password':'user',
     'email':'user@gmail.com',
@@ -90,8 +91,8 @@ topics = [{
     'title':u'一个公开的话题',
     'content':u'这是一个公开的话题',
     'is_public':1,
-    'creator_id':users[0]['user_id'],
-    'user_id':users[0]['user_id'],
+    'creator_id':0,
+    'user_id':0,
     'comments':[],
 },{
     'topic_id':1,
@@ -99,9 +100,34 @@ topics = [{
     'title':u'一个私密的话题',
     'content':u'这是一个私密的话题',
     'is_public':0,
-    'creator_id':users[4]['user_id'],
-    'user_id':users[4]['user_id'],
+    'creator_id':5,
+    'user_id':5,
     'comments':[],
+},None,{
+    'topic_id':3,
+    'image_id':'4.jpg',
+    'title':u'一个新的话题',
+    'content':u'这是一个新的话题',
+    'is_public':1,
+    'creator_id':5,
+    'user_id':5,
+    'comments':[],
+}]
+
+groups = [{
+    'group_id':0,
+    'name':u'管理员小组',
+    'brief':u'只有管理员在的组',
+    'creator_id':0,
+    'members':[],
+    'requests':[],
+},None,{
+    'group_id':2,
+    'name':u'大家的小组',
+    'brief':u'好多人在这个小组',
+    'creator_id':0,
+    'members':[users[1],users[2],users[3]],
+    'requests':[],
 }]
 
 def get_user_by_id(id):
@@ -121,6 +147,12 @@ def get_topic_by_id(id):
     for t in topics:
         if t and t['topic_id'] == int(id):
             return t
+    raise NotFoundException()
+
+def get_group_by_id(id):
+    for g in groups:
+        if g and g['group_id'] == int(id):
+            return g
     raise NotFoundException()
 
 def update_by_key_int(a, b, key):
@@ -148,6 +180,23 @@ def get(url, **kwargs):
             id = int(re.match(r'^/users/(?P<id>\d+)/notifications/$', url).group('id'))
             user = get_user_by_id(id)
             return codes.ok, user['notifications']
+        if re.match(r'^/users/(?P<id>\d+)/groups/$', url):
+            id = int(re.match(r'^/users/(?P<id>\d+)/groups/$', url).group('id'))
+            user = get_user_by_id(id)
+            return codes.ok, filter(lambda g:g and (g['creator_id'] == id or user in g['members']), groups)
+        if re.match(r'^/users/(?P<id>\d+)/groups/requests/$', url):
+            id = int(re.match(r'^/users/(?P<id>\d+)/groups/requests/$', url).group('id'))
+            user = get_user_by_id(id)
+            gs = filter(lambda g:g and (g['creator_id'] == id or user in g['members']), groups)
+            result = []
+            for g in gs:
+                for r in g['requests']:
+                    result.append({})
+                    result[-1]['group_name'] = g['name']
+                    result[-1]['group_id'] = g['group_id']
+                    result[-1]['username'] = r['username']
+                    result[-1]['user_id'] = r['user_id']
+            return codes.ok, result
         if url == "/bans/":
             return codes.ok, filter(lambda u:u and u['is_banned'] == 1, users)
         if url == "/vips/":
@@ -166,71 +215,11 @@ def get(url, **kwargs):
         if re.match(r'^/topics/(?P<id>\d+)/comments/$', url):
             id = int(re.match(r'^/topics/(?P<id>\d+)/comments/$', url).group('id'))
             return codes.ok, filter(lambda c:c, get_topic_by_id(id)['comments'])
-        if url == "/groups/" or url == "/users/1/groups/":
-            return codes.ok, storify([
-                    {
-                        'group_id':1,
-                        'name':u'吃奶子兴趣小组',
-                        'brief':u'陈年马奶子，欢迎来吃',
-                        'creator': u
-                    },
-                    {
-                        'group_id':2,
-                        'name':u'读书小组',
-                        'brief':u'书是人类进步的阶梯',
-                        'creator': users[1]
-                    },
-                    {
-                        'group_id':3,
-                        'name':u'LOL小组',
-                        'brief':u'一起来玩吧',
-                        'creator': users[2]
-                    }
-                ])
-        if url == "/groups/1/":
-            return codes.ok, storify(
-                    {
-                        'group_id':1,
-                        'name':u'吃奶子兴趣小组',
-                        'brief':u'陈年马奶子，欢迎来吃',
-                        'creator':u,
-                        'members':[u, users[1], users[2],
-                            {
-                                'user_id':3,
-                                'username':'陈叔叔',
-                                'email':'cldtc@gmail.com',
-                                'gender':'1',
-                                'phone':'18801733333',
-                                'location':'床上',
-                                'is_vip':0,
-                                'is_admin':0
-                            },
-                            {
-                                'user_id':4,
-                                'username':'逗比',
-                                'email':'meishadia@gmail.com',
-                                'gender':'1',
-                                'phone':'18801734044',
-                                'location':'床上',
-                                'is_vip':1,
-                                'is_admin':0
-                            }
-                        ]
-                    })
-        if url == '/users/1/groups/requests/':
-            return codes.ok, storify([
-                {
-                    'user_id':2,
-                    'group_name':'吃奶子俱乐部',
-                    'username':'manaizi',
-                    'group_id':1
-                },
-                {
-                    'user_id':3,
-                    'group_name':'吃奶子',
-                    'username':'nitianwosha',
-                    'group_id':2
-                }])
+        if url == "/groups/":
+            return codes.ok, filter(lambda g:g, groups)
+        if re.match(r'^/groups/(?P<id>\d+)/$', url):
+            id = int(re.match(r'^/groups/(?P<id>\d+)/$', url).group('id'))
+            return codes.ok, get_group_by_id(id)
     except NotFoundException:
         return codes.bad, {}
     return 0, None
@@ -310,9 +299,34 @@ def post(url, data={}, **kwargs):
                     user['notifications'][-1]['content'] = data['content']
             return codes.created, {}
         if url == '/groups/':
-            return codes.created, storify({'group_id':1})
-        if url == '/groups/1/requests/':
-            return codes.created, storify({})
+            groups.append({})
+            groups[-1]['group_id'] = len(groups) - 1
+            groups[-1]['creator_id'] = int(data['user_id'])
+            groups[-1]['user_id'] = int(data['user_id'])
+            groups[-1]['name'] = data['name']
+            groups[-1]['brief'] = data['brief']
+            groups[-1]['members'] = []
+            groups[-1]['requests'] = []
+            return codes.created, groups[-1]
+        if re.match(r'^/groups/(?P<id>\d+)/requests/$', url):
+            id = int(re.match(r'^/groups/(?P<id>\d+)/requests/$', url).group('id'))
+            group = get_group_by_id(id)
+            user = get_user_by_id(int(data['user_id']))
+            if user not in groups[-1]['requests'] and user not in groups[-1]['members']:
+                groups[-1]['requests'].append(user)
+                return codes.created, {}
+            return codes.bad, {}
+        if re.match(r'^/groups/(?P<id>\d+)/requests/(?P<uid>\d+)/$', url):
+            r = re.match(r'^/groups/(?P<id>\d+)/requests/(?P<uid>\d+)/$', url)
+            id = int(r.group('id'))
+            uid = int(r.group('uid'))
+            group = get_group_by_id(id)
+            user = get_user_by_id(uid)
+            if user in groups[-1]['requests']:
+                groups[-1]['members'].append(user)
+                groups[-1]['requests'].remove(user)
+                return codes.created, {}
+            return codes.bad, {}
     except NotFoundException:
         return codes.bad, {}
     return 0, None
@@ -341,8 +355,6 @@ def put(url, data={}, **kwargs):
             update_by_key(topic, data, 'content')
             update_by_key(topic, data, 'image_id')
             return codes.accepted, {}
-        if url == '/vips/1/0/' or url == '/vips/1/1/' or url == '/vips/1/2/':
-            return codes.ok, storify({})
     except NotFoundException:
         return codes.bad, {}
     return 0, None
@@ -377,8 +389,30 @@ def delete(url, data={}, **kwargs):
                     topic['comments'][j] = None
                     return codes.accepted, {}
             return codes.bad, {}
-        if url == "/groups/1/":
-            return codes.accepted, storify({})
+        if re.match(r"^/groups/(?P<id>\d+)/$", url):
+            id = int(re.match(r"^/groups/(?P<id>\d+)/$", url).group('id'))
+            # Owner
+            for j in range(len(groups)):
+                if groups[j] and groups[j]['group_id'] == int(data['user_id']):
+                    groups[j] = None
+                    return codes.accepted, {}
+            # Members
+            group = get_group_by_id(id)
+            for j in range(len(group['members'])):
+                if group['members'][j] and group['members'][j]['user_id'] == int(data['user_id']):
+                    del group['members'][j]
+                    return codes.accepted, {}
+            return codes.bad, {}
+        if re.match(r'^/groups/(?P<id>\d+)/requests/(?P<uid>\d+)/$', url):
+            r = re.match(r'^/groups/(?P<id>\d+)/requests/(?P<uid>\d+)/$', url)
+            id = int(r.group('id'))
+            uid = int(r.group('uid'))
+            group = get_group_by_id(id)
+            user = get_user_by_id(uid)
+            if user in groups[-1]['requests']:
+                groups[-1]['requests'].remove(user)
+                return codes.created, {}
+            return codes.bad, {}
     except NotFoundException:
         return codes.bad, {}
     return 0, None

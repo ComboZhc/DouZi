@@ -106,6 +106,9 @@ def get_user(id):
 #    raise id
     return j
 
+def ok(status):
+    return status in (codes.ok, codes.created, codes.accepted)
+
 class Home:
     def GET(self):
         if session.user:
@@ -122,7 +125,7 @@ class Login:
     def POST(self):
         i = web.input()
         r, j = client.post('/login/', data=i)
-        if r == codes.ok:
+        if ok(r):
             flash(_.login.ok)
             session.user = j
             session.username = i.username
@@ -153,7 +156,7 @@ class Reg:
         i.is_vip = 0
         del i.password2
         r, j = client.post('/users/', data=i)
-        if r == codes.created:
+        if ok(r):
             flash(_.reg.ok)
             raise web.redirect('/login/')
         else:
@@ -166,9 +169,9 @@ class User:
             return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.get('/users/%i/' % int(id))
-        if r == codes.ok:
+        if ok(r):
             r, f = client.get('/users/%i/friends/' % int(id))
-            if r == codes.ok:
+            if ok(r):
                 return render.user(user=j, friends=f)
         return web.notfound()
 
@@ -178,7 +181,7 @@ class UserEdit:
             return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.get('/users/%i/' % int(id))
-        if r == codes.ok:
+        if ok(r):
             return render.user_edit(user=j)
         else:
             return web.notfound()
@@ -189,7 +192,7 @@ class UserEdit:
         del i.old_password
         del i.password2
         r, j = client.put('/users/%i/' % int(id), data=i)
-        if r == codes.accepted:
+        if ok(r):
             flash(_.user.edit.ok)
             raise web.redirect('/users/%i/' % int(id))
         else:
@@ -202,7 +205,7 @@ class UserFriend:
             return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.post('/users/%i/friends/' % int(user().user_id), data={'friend_id': int(id)})
-        if r == codes.created:
+        if ok(r):
             flash(_.user.friend.ok)
             raise web.redirect('/users/%i/' % int(id))
         else:
@@ -216,10 +219,10 @@ class UserBan:
             return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.get('/users/%i/' % int(id))
-        if r == codes.ok:
+        if ok(r):
             j.is_banned = int(is_banned)
             r, j = client.put('/users/%i/' % int(id), data=j)
-            if r == codes.accepted:
+            if ok(r):
                 flash(_.user.ban.ok)
                 return web.redirect('/users/%i/' % int(id))
         flash(_.user.ban.fail)
@@ -231,7 +234,7 @@ class TopicList:
         r, j = client.get('/topics/')
         if not is_admin():
             j = filter(lambda t: t.is_public, j)
-        if r == codes.ok:
+        if ok(r):
             return render.topics_list(topics=j)
         return web.notfound()
 
@@ -241,7 +244,7 @@ class TopicHotList:
             return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.get('/topics/hot/')
-        if r == codes.ok:
+        if ok(r):
             return render.topics_list(topics=j)
         else:
             return web.notfound()
@@ -265,7 +268,7 @@ class TopicNew:
         f.close()
         del i.image
         r, j = client.post('/topics/', data=i)
-        if r == codes.created:
+        if ok(r):
             flash(_.topic.new.ok)
             raise web.redirect('/topics/%i/' % int(j.topic_id))
         else:
@@ -284,7 +287,7 @@ class TopicMy:
             return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.get('/users/%i/topics/' % int(session.user.user_id))
-        if r == codes.ok:
+        if ok(r):
             return render.topics_my(topics=j)
         else:
             return web.notfound()
@@ -308,7 +311,7 @@ class TopicEdit:
             return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.get('/topics/%i/' % int(id))
-        if r == codes.ok:
+        if ok(r):
             return render.topics_edit(topic=j)
         else:
             return web.notfound()
@@ -326,7 +329,7 @@ class TopicEdit:
             f.close()
             del i.image
         r, j = client.put('/topics/%i/' % int(id), data=i)
-        if r == codes.accepted:
+        if ok(r):
             flash(_.topic.edit.ok)
             raise web.redirect('/topics/%i/' % int(id))
         else:
@@ -340,7 +343,7 @@ class TopicDelete:
         print 'hi'
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.delete('/topics/%i/' % int(id))
-        if r == codes.accepted:
+        if ok(r):
             raise web.redirect('/topics/');
         else:
             return web.notfound()
@@ -352,7 +355,7 @@ class TopicComment:
         i = web.input()
         i.creator_id = session.user.user_id
         r, j = client.post('/topics/%i/comments/' % int(id), data=i)
-        if r == codes.created:
+        if ok(r):
             raise web.redirect('/topics/%i/' % int(id));
         else:
             return web.notfound()
@@ -362,7 +365,7 @@ class TopicCommentDelete:
         if not is_admin():
             return web.notfound()
         r, j = client.delete('/topics/%i/comments/%i/' % (int(topic_id), int(comment_id)))
-        if r == codes.accepted:
+        if ok(r):
             raise web.redirect('/topics/%i/' % int(topic_id))
         else:
             return web.notfound()
@@ -373,7 +376,7 @@ class BanList:
             return web.notfound()
         render = web.template.render('asset',base='after.common', globals=globals())
         r, j = client.get('/bans/')
-        if r == codes.ok:
+        if ok(r):
             return render.user_list(user_list=j)
         else:
             return web.notfound()
@@ -384,7 +387,7 @@ class VipList:
             return web.notfound()
         render = web.template.render('asset',base='after.common', globals=globals())
         r, j = client.get('/vips/')
-        if r == codes.ok:
+        if ok(r):
             return render.user_list(user_list=j)
         else:
             return web.notfound()
@@ -395,7 +398,7 @@ class VipPending:
             return web.notfound()
         render = web.template.render('asset',base='after.common', globals=globals())
         r, j = client.get('/vips/pending/')
-        if r == codes.ok:
+        if ok(r):
             return render.user_list(user_list=j)
         else:
             return web.notfound()
@@ -406,10 +409,10 @@ class VipSet:
             return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.get('/users/%i/' % int(id))
-        if r == codes.ok:
+        if ok(r):
             j.is_vip = int(is_vip)
             r, j = client.put('/users/%i/' % int(id), data=j)
-            if r == codes.accepted:
+            if ok(r):
                 flash(_.vip.set.ok if int(is_vip != 2) else _.vip.set.up.ok)
                 return web.redirect('/users/%i/' % int(id))
         flash(_.vip.set.fail)
@@ -430,7 +433,7 @@ class VipAD:
         i.user_id = session.user.user_id
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.post('/notifications/new/', data=i)
-        if r == codes.created:
+        if ok(r):
             flash(_.notification.ad.ok)
             raise web.redirect('/vips/ad/')
         else:
@@ -451,7 +454,7 @@ class NotificationsNew:
         i.user_id = session.user.user_id
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.post('/notifications/new/', data=i)
-        if r == codes.created:
+        if ok(r):
             flash(_.notification.new.ok)
             raise web.redirect('/notifications/new/')
         else:
@@ -472,7 +475,7 @@ class GroupNew:
         i.user_id = session.user.user_id
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.post('/groups/', data=i)
-        if r == codes.ok:
+        if ok(r):
             flash(_.group.new.ok)
             raise web.redirect('/groups/%i/' % int(j.group_id))
         else:
@@ -485,7 +488,7 @@ class GroupList:
             return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.get('/groups/')
-        if r == codes.ok:
+        if ok(r):
             return render.groups_list(groups_list=j)
         return web.notfound()
 
@@ -496,7 +499,7 @@ class GroupMy:
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.get('/users/%i/groups/' % int(session.user.user_id))
         print '/users/%i/groups/' % int(session.user.user_id), j
-        if r == codes.ok:
+        if ok(r):
             return render.groups_list(groups_list=j)
         return web.notfound()
 
@@ -506,7 +509,7 @@ class Group:
             return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.get('/groups/%i/' % int(id))
-        if r == codes.ok:
+        if ok(r):
             return render.groups_detail(group=j)
         return web.notfound()
 
@@ -516,9 +519,12 @@ class GroupJoin:
             return web.notfound()
         i = {'user_id':session.user.user_id}
         r, j = client.post('/groups/%i/requests/' % int(group_id), data=i)
-        if r == codes.created:
+        if ok(r):
+            flash(_.group.join.ok)
             return web.redirect('/groups/%i/' % int(group_id))
-        return web.notfound()
+        else:
+            flash(_.group.join.fail)
+            return web.redirect('/groups/%i/' % int(group_id))
 
 class GroupQuit:
     def POST(self, group_id):
@@ -526,7 +532,8 @@ class GroupQuit:
             return web.notfound()
         i = {'user_id':session.user.user_id}
         r, j = client.delete('/groups/%i/' % int(group_id), data=i)
-        if r == codes.accepted:
+        if ok(r):
+            flash(_.group.quit.ok)
             return web.redirect('/groups/')
         return web.notfound()
 
@@ -535,13 +542,13 @@ class GroupApprove:
         if not user():
             return web.notfound()
         i = {'user_id':session.user.user_id}
-        if is_approved == 1:
+        if int(is_approved) == 1:
             r, j = client.post('/groups/%i/requests/%i/' % (int(group_id),int(user_id)), data=i)
-            if r == codes.created:
+            if ok(r):
                 return web.redirect('/groups/requests/')
-        elif is_approved == 0:
+        elif int(is_approved) == 0:
             r, j = client.delete('/groups/%i/requests/%i/' % (int(group_id),int(user_id)), data=i)
-            if r == codes.accepted:
+            if ok(r):
                 return web.redirect('/groups/requests/')
         return web.notfound()
 
@@ -551,7 +558,7 @@ class GroupRequests:
             return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.get('/users/%i/groups/requests/' % session.user.user_id)
-        if r == codes.ok:
+        if ok(r):
             return render.groups_requests(requests=j)
         return web.notfound()
 
@@ -561,7 +568,7 @@ class Notifications:
             return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.get('/users/%i/notifications/' % session.user.user_id)
-        if r == codes.ok:
+        if ok(r):
             return render.notifications_list(notifications=j)
         return web.notfound()
 
@@ -572,7 +579,7 @@ class TopicRecommend:
         render = web.template.render('asset', base='after.common', globals=globals())
         r, t = client.get('/topics/%i/' % int(topic_id))
         r, j = client.get('/users/')
-        if r == codes.ok:
+        if ok(r):
             return render.topics_recommend(users=j,topic=t)
         return web.notfound()
 
@@ -584,7 +591,7 @@ class TopicRecommend:
         i.content += '<a href="/topics/%i/">#%s#</a>' % (int(i.topic_id), i.topic_title)
         i.user_id = session.user.user_id
         r, j = client.post('/notifications/new/', data=i)
-        if r == codes.created:
+        if ok(r):
             flash(_.notification.recommend.ok)
             raise web.redirect('/topics/%i/' % int(i.topic_id))
         else:

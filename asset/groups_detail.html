@@ -44,12 +44,21 @@ $var css:group.css
                 </div>
                 <br />
                 <div class="container">
+                    <div class="members-header">组长</div>
+                    <div class="members">
+                        $ user = get_user(group.creator_id)
+                            <a href="/users/$user.user_id/">$user.username</a>$:image_gender(user.gender) &nbsp;
+                    </div>
+                </div>
+                <br/>
+                <div class="container">
                     <div class="members-header">小组成员</div>
                     <div class="members">
                         $for item in group.members:
                             <a href="/users/$item.user_id/">$item.username</a>$:image_gender(item.gender) &nbsp;
                     </div>
                 </div>
+            </div>
             </div>
         </div>
     </div>
