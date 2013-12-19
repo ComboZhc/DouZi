@@ -604,15 +604,14 @@ class GroupRecommend:
     def GET(self, group_id):
         render = web.template.render('asset', base='after.common', globals=globals())
         r, t = client.get('/groups/%i/' % int(group_id))
-        r, j = client.get('/users/')
+        r, j = client.get('/users/%i/friends/' % int(session.user.user_id))
         if ok(r):
             return render.groups_recommend(users=j,group=t)
         return web.notfound()
 
     def POST(self, group_id):
-        render = web.template.render('asset', base='after.common', globals=globals())
         i = web.input()
-        i.content += '<a href="/groups/%i/">#%s#</a><a role="button" class="pull-right btn btn-primary btn-sm" href="/groups/%i/accept/">Join</a>' % (int(i.group_id), i.group_title)
+        i.content += '<a href="/groups/%i/">#%s#</a><a role="button" class="pull-right btn btn-primary btn-sm" href="/groups/%i/accept/">Join</a>' % (int(i.group_id), i.group_title, int(i.group_id))
         i.user_id = session.user.user_id
         r, j = client.post('/notifications/new/', data=i)
         if ok(r):
@@ -632,7 +631,7 @@ class GroupAccept:
         i = {'user_id':g.creator_id}
         r, j = client.post('/groups/%i/requests/%i/' % (int(group_id),int(session.user.user_id)), data=i)
 
-        raise web.redirect('/groups/%i/' % group_id)
+        raise web.redirect('/groups/%i/' % int(group_id))
 
 if __name__ == "__main__":
     app.run()

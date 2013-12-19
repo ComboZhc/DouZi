@@ -1,7 +1,7 @@
 $def with(users,group)
 $var title:邀请好友加入小组
 $var css:topic.css
-  <form id="form-topic-recommend" action="/topics/$group.group_id/recommend/" method="post">
+  <form id="form-topic-recommend" action="/groups/$group.group_id/recommend/" method="post">
     <div class="form-group">
       <input type="text" class="form-control" placeholder="标题" name="title" autofocus>
     </div>
