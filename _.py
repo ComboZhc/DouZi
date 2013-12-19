@@ -59,3 +59,4 @@ class group:
 class prefix:
     ad = u'[广告]'
     recommend = u'[推荐话题]'
+    push = u'[推送]我发布了一个话题'
