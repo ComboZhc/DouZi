@@ -14,6 +14,7 @@ urls = (
     r'/users/(\d+)/?', 'User',
     r'/users/(\d+)/edit/?', 'UserEdit',
     r'/users/(\d+)/friend/?', 'UserFriend',
+    r'/users/(\d+)/friend/cancel/?', 'UserFriendCancel',
     r'/topics/?','TopicList',
     r'/topics/hot/?','TopicHotList',
     r'/topics/new/?', 'TopicNew',
@@ -107,6 +108,13 @@ def get_user(id):
     r, j = client.get('/users/%i/' % int(id))
 #    raise id
     return j
+
+def is_followed(user_id):
+    r, j = client.get('/users/%i/friends/' % session.user.user_id)
+    for item in j:
+        if item.user_id == user_id:
+            return True
+    return False
 
 def ok(status):
     return status in (codes.ok, codes.created, codes.accepted)
@@ -212,6 +220,19 @@ class UserFriend:
             raise web.redirect('/users/%i/' % int(id))
         else:
             flash(_.user.friend.fail)
+            raise web.redirect('/users/%i/' % int(id))
+
+class UserFriendCancel:
+    def POST(self, id):
+        if not user():
+            return web.notfound()
+        render = web.template.render('asset', base='after.common', globals=globals())
+        r, j = client.delete('/users/%i/friends/%i/' % (int(user().user_id),int(id)))
+        if ok(r):
+            flash(_.user.unfollow.ok)
+            raise web.redirect('/users/%i/' % int(id))
+        else:
+            flash(_.user.unfollow.fail)
             raise web.redirect('/users/%i/' % int(id))
 
 			

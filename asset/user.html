@@ -14,7 +14,10 @@ $var css:user.css
           $if is_admin() or session.user.user_id == user.user_id:
             <li><a href="/users/$(user.user_id)/edit/">编辑</a></li>
           $if session.user.user_id != user.user_id:
-            <li><form action="/users/$(user.user_id)/friend/" method="post"><button type="submit">关注</button></form></li>
+            $if is_followed(user.user_id):
+              <li><form action="/users/$(user.user_id)/friend/cancel/" method="post"><button type="submit">取笑关注</button></form></li>
+            $else:
+              <li><form action="/users/$(user.user_id)/friend/" method="post"><button type="submit">关注</button></form></li>
           $if user.is_vip == 0 and not is_admin() and session.user.user_id == user.user_id:
             <li><form action="/vips/$(user.user_id)/2/" method="post"><button type="submit">申请VIP</button></form></li>
           $if is_admin():

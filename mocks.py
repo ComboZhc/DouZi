@@ -377,7 +377,7 @@ def delete(url, data={}, **kwargs):
             user = get_user_by_id(id)
             for j in range(len(user['friends'])):
                 if user['friends'][j] == fid:
-                    del friends['friends'][j]
+                    del user['friends'][j]
                     return codes.accepted, {}
             return codes.bad, {}
         if re.match(r'^/topics/(?P<id>\d+)/$', url):
