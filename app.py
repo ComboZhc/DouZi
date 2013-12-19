@@ -431,7 +431,8 @@ class VipAD:
         if not is_vip():
             return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
-        return render.notifications_new(vipad=1)
+        r, j = client.get('/users/')
+        return render.notifications_new(vipad=1, users=j)
 
     def POST(self):
         if not is_vip():
@@ -453,7 +454,8 @@ class NotificationsNew:
         if not is_admin():
             return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
-        return render.notifications_new(vipad=0)
+        r, j = client.get('/users/')
+        return render.notifications_new(vipad=0, users=j)
 
     def POST(self):
         if not is_admin():

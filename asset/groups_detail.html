@@ -22,14 +22,12 @@ $var css:group.css
                  <ul class="dropdown-menu" role="menu">
                 $if group.creator_id == session.user.user_id:
                     <li><form method="post" action="/groups/$group.group_id/delete/"><button type="submit">删除</button></form></li>
-                    <li><a href="/groups/$group.group_id/recommend/">推荐给好友</a></li>
+                    <li><a href="/groups/$group.group_id/recommend/">邀请加入</a></li>
                 $else:
                     $if is_ingroup(group):
                         <li><form method="post" action="/groups/$group.group_id/quit/"><button type="submit">退出</button></form></li>
                     $else:
                         <li><form method="post" action="/groups/$group.group_id/join/"><button type="submit">加入</button></form></li>
-                    $if is_admin():
-                        <li><form method="post" action="/groups/$group.group_id/delete/"><button type="submit">删除</button></form></li>
                 </ul>
                 </div>
             </div>

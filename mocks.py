@@ -208,7 +208,7 @@ def get(url, **kwargs):
             return codes.ok, filter(lambda t:t, topics)
         if url == "/topics/hot/":
             hot_topics = filter(lambda t:t, topics)
-            hot_topics.sort(lambda a, b: len(a['comments']) - len(b['comments']))
+            hot_topics.sort(lambda a, b: - len(a['comments']) + len(b['comments']))
             return codes.ok, hot_topics
         if re.match(r'^/topics/(?P<id>\d+)/$', url):
             id = int(re.match(r'^/topics/(?P<id>\d+)/$', url).group('id'))
@@ -320,8 +320,8 @@ def post(url, data={}, **kwargs):
             id = int(re.match(r'^/groups/(?P<id>\d+)/requests/$', url).group('id'))
             group = get_group_by_id(id)
             user = get_user_by_id(int(data['user_id']))
-            if user not in groups[-1]['requests'] and user not in groups[-1]['members']:
-                groups[-1]['requests'].append(user)
+            if user not in group['requests'] and user not in group['members']:
+                group['requests'].append(user)
                 return codes.created, {}
             return codes.bad, {}
         if re.match(r'^/groups/(?P<id>\d+)/requests/(?P<uid>\d+)/$', url):
@@ -330,9 +330,9 @@ def post(url, data={}, **kwargs):
             uid = int(r.group('uid'))
             group = get_group_by_id(id)
             user = get_user_by_id(uid)
-            if user in groups[-1]['requests']:
-                groups[-1]['members'].append(user)
-                groups[-1]['requests'].remove(user)
+            if user in group['requests']:
+                group['members'].append(user)
+                group['requests'].remove(user)
                 return codes.created, {}
             return codes.bad, {}
     except NotFoundException:
@@ -362,6 +362,7 @@ def put(url, data={}, **kwargs):
             update_by_key(topic, data, 'title')
             update_by_key(topic, data, 'content')
             update_by_key(topic, data, 'image_id')
+            update_by_key(topic, data, 'is_public')
             return codes.accepted, {}
     except NotFoundException:
         return codes.bad, {}
@@ -401,7 +402,7 @@ def delete(url, data={}, **kwargs):
             id = int(re.match(r"^/groups/(?P<id>\d+)/$", url).group('id'))
             # Owner
             for j in range(len(groups)):
-                if groups[j] and groups[j]['group_id'] == int(data['user_id']):
+                if groups[j] and groups[j]['creator_id'] == int(data['user_id']):
                     groups[j] = None
                     return codes.accepted, {}
             # Members
@@ -417,8 +418,8 @@ def delete(url, data={}, **kwargs):
             uid = int(r.group('uid'))
             group = get_group_by_id(id)
             user = get_user_by_id(uid)
-            if user in groups[-1]['requests']:
-                groups[-1]['requests'].remove(user)
+            if user in group['requests']:
+                group['requests'].remove(user)
                 return codes.created, {}
             return codes.bad, {}
     except NotFoundException:

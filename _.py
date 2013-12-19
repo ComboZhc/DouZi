@@ -64,8 +64,8 @@ class group:
         ok = u'创建小组成功'
         fail = u'创建小组失败'
     class quit:
-        ok = u'退出小组成功'
-        fail = u'退出小组失败'
+        ok = u'退出/删除小组成功'
+        fail = u'退出/删除小组失败'
     class join:
         ok = u'申请加入提交'
         fail = u'已经申请加入了'

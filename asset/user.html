@@ -32,6 +32,8 @@ $var css:user.css
       </div>
       $if not is_admin() and user.is_public == 0:
         <div class="list-group-item">TA没有公开相关信息</div>
+      $elif not is_admin() and user.is_admin == 1:
+        <div class="list-group-item">没有权限查看TA的信息</div>
       $else:
         <div class="list-group-item">$user.email</div>
         <div class="list-group-item">$user.phone</div>

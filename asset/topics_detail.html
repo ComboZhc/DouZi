@@ -21,10 +21,9 @@ $var css:topic.css
                    操作 <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
-                   <li><a href="/topics/$topic.topic_id/recommend/">推荐</a></li>
                    <li><a href="/topics/$topic.topic_id/edit/">编辑</a></li>
                    <li><form method="post" action="/topics/$topic.topic_id/delete/"><button type="submit">删除</button></form></li>
-                   <li><form method="post" action="/topics/$topic.topic_id/recommend/"><button type="submit">推荐</button></form></li>
+                   <li><a href="/topics/$topic.topic_id/recommend/">推荐</a></li>
                 </ul>
             $elif topic.user_id == session.user.user_id:
                 <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
