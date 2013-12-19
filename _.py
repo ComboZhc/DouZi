@@ -38,8 +38,24 @@ class notification:
     class new:
         ok = u'发送通知成功'
         fail = u'发送通知失败'
+    class recommend:
+        ok = u'推荐话题成功'
+        fail = u'推荐话题失败'
+    class ad:
+        ok = u'发送广告成功'
+        fail = u'发送广告失败'
 
 class group:
     class new:
         ok = u'创建小组成功'
         fail = u'创建小组失败'
+    class quit:
+        ok = u'退出小组成功'
+        fail = u'退出小组失败'
+    class join:
+        ok = u'申请加入提交'
+        fail = u'已经申请加入了'
+
+class prefix:
+    ad = u'[广告]'
+    recommend = u'[推荐话题]'

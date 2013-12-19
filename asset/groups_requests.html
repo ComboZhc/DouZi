@@ -10,7 +10,7 @@ $var css:group.css
     <tbody>
       $for r in requests:
       <tr>
-        <td>$r.username</td>
+        <td><a href="/users/$r.user_id/">$r.username</a></td>
         <td><a href="/groups/$r.group_id/">$r.group_name</a></td>
         <td><form method="post" action="/groups/$r.group_id/approve/$r.user_id/1/"><button class="btn btn-xs btn-info" type="submit">同意</button></form>
         &nbsp;

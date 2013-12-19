@@ -16,87 +16,91 @@ $var css:topic.css
             </div>
             
             <div class="col-lg-2">
-            $if topic.user_id == session.user.user_id:
+            $if is_admin():
                 <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
                    操作 <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
-                   <li><a href="/topics/$topic.topic_id/recommend/">推荐给好友</a></li>
-                   <li><a href="/topics/$topic.topic_id/edit/">编辑</a></li>
-                   <li><form method="post" action="/topics/$topic.topic_id/delete/"><button type="submit">删除</button></form></li>
-                </ul>
-            $elif is_admin():
-                <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
-                   操作 <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                   <li><a href="/topics/$topic.topic_id/recommend/">推荐给好友</a></li>
+                   <li><a href="/topics/$topic.topic_id/recommend/">推荐</a></li>
                    <li><a href="/topics/$topic.topic_id/edit/">编辑</a></li>
                    <li><form method="post" action="/topics/$topic.topic_id/delete/"><button type="submit">删除</button></form></li>
                    <li><form method="post" action="/topics/$topic.topic_id/recommend/"><button type="submit">推荐</button></form></li>
                 </ul>
+            $elif topic.user_id == session.user.user_id:
+                <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
+                   操作 <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                   <li><a href="/topics/$topic.topic_id/edit/">编辑</a></li>
+                   <li><form method="post" action="/topics/$topic.topic_id/delete/"><button type="submit">删除</button></form></li>
+                </ul>
             </div>
             </div>
         </div>
-    
-        <div class="panel-body">
-            <div class="row">
-            <div class="col-lg-4">
-                <img class="topic-pic" src="/static/image/$topic.image_id" />
-            </div>
-            $ user = get_user(topic.user_id)
-            <div class="col-lg-8">
-                <div class="container">
-                    <div class="comment">
-                        <a href="/users/$topic.user_id/">$user.username</a> 
-                        $:image_gender(user.gender)  
-                        <span class="comment-content">: $topic.content</span>
-                    </div>
+        $if topic.is_public or topic.user_id == session.user.user_id or is_admin():
+            <div class="panel-body">
+                <div class="row">
+                <div class="col-lg-4">
+                    <img class="topic-pic" src="/static/image/$topic.image_id" />
                 </div>
-                $for c in comments:
-                    $ user = get_user(c.creator_id)
+                $ user = get_user(topic.user_id)
+                <div class="col-lg-8">
                     <div class="container">
-                        <div class="comment" id="$c.comment_id">
-                            <a href="/users/$c.creator_id/">$user.username</a>
-                            $:image_gender(user.gender)
-                            <span class="comment-content">: $c.content</span>
+                        <div class="comment">
+                            <a class="comment-name" href="/users/$topic.user_id/">$user.username</a> 
+                            $:image_gender(user.gender)  
+                            <span class="comment-content">: $topic.content</span>
                         </div>
                     </div>
-                <div id="comment-box" class="container">
-                    <form action="/topics/$(topic.topic_id)/comments/" method="post">
-                        <div class="row">
-                            <div class="col-lg-9">
-                                <input type="text" class="form-control" name="content"placeholder="评论"></input>
-                            </div>
-                            <div class="col-lg-3">
-                                <button class="btn btn-sm btn-primary btn-block" type="submit">发表</button>
+                    $for c in comments:
+                        $ user = get_user(c.user_id)
+                        <div class="container">
+                            <div class="comment" id="$c.comment_id">
+                                <a class="comment-name" href="/users/$c.creator_id/">$user.username</a>
+                                $:image_gender(user.gender)
+                                <span class="comment-content">: $c.content</span>
                             </div>
                         </div>
-                    </form>
-                </div>
-                <script>
-                    $$(".comment").hover(function(){
-                        $$(this).append("<button class='btn btn-xs btn-info' id='float-reply'>回复</button>");
-                        $if session.user.is_admin == 1:
-                            if ($$(this).attr("id"))
-                                $$(this).append("<button class='btn btn-xs btn-danger' id='float-delete'>删除</button>");
-                    }, function(){
-                        $$("button#float-reply").remove();
-                        $$("button#float-delete").remove();
-                    });
-                    $$(document).on("click", "button#float-reply", function(){
-                        $$("#comment-box input").val("@" + $$(this).siblings(".comment-name").text() + ":");
-                        $$("#comment-box input").focus();
-                    });
-                    $$(document).on("click", "button#float-delete", function(){
-                        var comment_id = $$(this).parent().attr("id");
-                        $$.post("/topics/$(topic.topic_id)/comments/" + comment_id + "/delete/", function(data){
-                            window.location.reload();
+                    <div id="comment-box" class="container">
+                        <form action="/topics/$(topic.topic_id)/comments/" method="post">
+                            <div class="row">
+                                <div class="col-lg-9">
+                                    <input type="text" class="form-control" name="content"placeholder="评论"></input>
+                                </div>
+                                <div class="col-lg-3">
+                                    <button class="btn btn-sm btn-primary btn-block" type="submit">发表</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <script>
+                        $$(".comment").hover(function(){
+                            $$(this).append("<button class='btn btn-xs btn-info' id='float-reply'>回复</button>");
+                            $if session.user.is_admin == 1:
+                                if ($$(this).attr("id"))
+                                    $$(this).append("<button class='btn btn-xs btn-danger' id='float-delete'>删除</button>");
+                        }, function(){
+                            $$("button#float-reply").remove();
+                            $$("button#float-delete").remove();
                         });
-                    });
-                </script>
+                        $$(document).on("click", "button#float-reply", function(){
+                            $$("#comment-box input").val("@" + $$(this).siblings(".comment-name").text() + ":");
+                            $$("#comment-box input").focus();
+                        });
+                        $$(document).on("click", "button#float-delete", function(){
+                            var comment_id = $$(this).parent().attr("id");
+                            $$.post("/topics/$(topic.topic_id)/comments/" + comment_id + "/delete/", function(data){
+                                window.location.reload();
+                            });
+                        });
+                    </script>
+                </div>
+                </div>
             </div>
-        </div>
+        $else:
+            <div class="panel-body">
+                这是一个隐私话题
+            </div>
     </div>
     
     <div class="footer">

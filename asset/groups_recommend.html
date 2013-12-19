@@ -1,0 +1,21 @@
+$def with(users,group)
+$var title:邀请好友加入小组
+$var css:topic.css
+  <form id="form-topic-recommend" action="/topics/$group.group_id/recommend/" method="post">
+    <div class="form-group">
+      <input type="text" class="form-control" placeholder="标题" name="title" autofocus>
+    </div>
+    <input type="hidden" name="group_title" value="$group.name"/>
+    <input type="hidden" name="group_id" value="$group.group_id"/>
+    <div class="form-group">
+      <select type="text" class="form-control" placeholder="收件人ID" name="receiver_id" autofocus>
+          <option value="" selected="selected">选择好友(此项表示所有人)</option>
+          $for item in users:
+            <option value="$item.user_id">$item.username</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <textarea type="text" class="form-control" name="content" placeholder="内容">这个小组很有趣，你也来看看吧！</textarea>
+    </div>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">邀请</button>
+  </form>

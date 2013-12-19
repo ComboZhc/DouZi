@@ -2,16 +2,22 @@
   width: 600px;
   margin: 0 auto;
 }
-#form-topic-new {
+#form-topic-new,  
+#form-topic-edit,
+#form-topic-recommend {
   max-width: 330px;
   padding: 15px;
   margin: 0 auto;
 }
-#form-topic-new .checkbox {
+#form-topic-new .checkbox,
+#form-topic-edit .checkbox,
+#form-topic-recommend .checkbox{
   margin-bottom: 10px;
   font-weight: normal;
 }
-#form-topic-new .form-control {
+#form-topic-new .form-control,
+#form-topic-edit .form-control,
+#form-topic-recommend .form-control{
   font-size: 16px;
   height: auto;
   padding: 10px;
@@ -19,7 +25,9 @@
      -moz-box-sizing: border-box;
           box-sizing: border-box;
 }
-#form-topic-new .form-control:focus {
+#form-topic-new .form-control:focus,
+#form-topic-edit .form-control:focus,
+#form-topic-recommend .form-control:focus{
   z-index: 2;
 }
 .comment {

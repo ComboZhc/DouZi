@@ -1,7 +1,12 @@
-$def with(title_id)
-$var title = "发送通知" if title_id == 1 else "发送广告"
+$def with(vipad)
+$var title = "发送通知" if vipad == 0 else "发送广告"
 $var css:notification.css
-  <form id="form-notification-new" enctype="multipart/form-data" action="/notifications/new/" method="post">
+  <form id="form-notification-new" enctype="multipart/form-data" action=
+    $if vipad == 0:
+      "/notifications/new/"
+    $else:
+      "/vips/ad/"
+    method="post">
     <div class="form-group">
       <input type="text" class="form-control" placeholder="标题" name="title" autofocus>
     </div>

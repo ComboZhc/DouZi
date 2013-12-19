@@ -20,6 +20,10 @@ class Storage(dict):
         return '<Storage ' + dict.__repr__(self) + '>'
 
 def _storify(mapping):
+    if mapping is None:
+        return None
+    if isinstance(mapping, int) or isinstance(mapping, str):
+        return mapping
     stor = Storage()
     for key in mapping.keys():
         value = mapping[key]
