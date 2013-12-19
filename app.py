@@ -328,7 +328,7 @@ class TopicEdit:
             return web.redirect('/topics/%i/edit/' % int(id))
     
 class TopicDelete:
-    def GET(self, id):
+    def POST(self, id):
         if not user():
             return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
@@ -450,7 +450,7 @@ class GroupNew:
         i.user_id = session.user.user_id
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.post('/groups/', data=i)
-        if r == codes.ok:
+        if r == codes.created:
             flash(_.group.new.ok)
             raise web.redirect('/groups/%i/' % int(j.group_id))
         else:
@@ -463,7 +463,6 @@ class GroupList:
             return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.get('/groups/')
-        raise j
         if r == codes.ok:
             return render.groups_list(groups_list=j)
         return web.notfound()
@@ -529,7 +528,7 @@ class GroupRequests:
         if not user():
             return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
-        r, j = client.get('/users/%i/groups/requests/' % session.user.user_id)
+        r, j = client.get('/users/%i/groups/requests/' % int(session.user.user_id))
         if r == codes.ok:
             return render.groups_requests(requests=j)
         return web.notfound()
@@ -551,7 +550,7 @@ class TopicRecommend:
             return web.notfound()
         render = web.template.render('asset', base='after.common', globals=globals())
         r, t = client.get('/topics/%i/' % int(topic_id))
-        r, j = client.get('/users/%i/friends/' % session.user.user_id)
+        r, j = client.get('/users/%i/friends/' % int(session.user.user_id))
         if r == codes.ok:
             return render.topics_recommend(friends=j,topic=t)
         return web.notfound()

@@ -54,7 +54,7 @@ $var css:topic.css
                     </div>
                 </div>
                 $for c in comments:
-                    $ user = get_user(c.user_id)
+                    $ user = get_user(c.creator_id)
                     <div class="container">
                         <div class="comment" id="$c.comment_id">
                             <a href="/users/$c.creator_id/">$user.username</a>
