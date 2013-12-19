@@ -15,6 +15,9 @@ class user:
     class friend:
         ok = u'关注好友成功'
         fail = u'已经关注了'
+    class unfollow:
+        ok = u'取消关注成功'
+        fail = u'已经取消了'
     class ban:
         ok = u'用户封禁/解封成功'
         fail = u'用户封禁/解封失败'
