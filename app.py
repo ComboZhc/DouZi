@@ -346,9 +346,11 @@ class TopicDelete:
         render = web.template.render('asset', base='after.common', globals=globals())
         r, j = client.delete('/topics/%i/' % int(id))
         if ok(r):
+            flash(_.topic.delete.ok)
             raise web.redirect('/topics/');
         else:
-            return web.notfound()
+            flash(_.topic.delete.fail)
+            raise web.redirect('/topics/%i/' % int(id));
             
 class TopicComment:
     def POST(self, id):
@@ -358,9 +360,11 @@ class TopicComment:
         i.creator_id = session.user.user_id
         r, j = client.post('/topics/%i/comments/' % int(id), data=i)
         if ok(r):
+            flash(_.comment.new.ok)
             raise web.redirect('/topics/%i/' % int(id));
         else:
-            return web.notfound()
+            flash(_.comment.fail.ok)
+            raise web.redirect('/topics/%i/' % int(id));
 
 class TopicCommentDelete:
     def POST(self, topic_id, comment_id):
@@ -368,9 +372,11 @@ class TopicCommentDelete:
             return web.notfound()
         r, j = client.delete('/topics/%i/comments/%i/' % (int(topic_id), int(comment_id)))
         if ok(r):
+            flash(_.comment.delete.ok)
             raise web.redirect('/topics/%i/' % int(topic_id))
         else:
-            return web.notfound()
+            flash(_.comment.delete.fail)
+            raise web.redirect('/topics/%i/' % int(topic_id))
 
 class BanList:
     def GET(self):
@@ -537,6 +543,9 @@ class GroupQuit:
         if ok(r):
             flash(_.group.quit.ok)
             return web.redirect('/groups/')
+        else:
+            flash(_.group.quit.fail)
+            return web.redirect('/groups/%i/' % int(group_id))
         return web.notfound()
 
 class GroupApprove:
@@ -547,10 +556,18 @@ class GroupApprove:
         if int(is_approved) == 1:
             r, j = client.post('/groups/%i/requests/%i/' % (int(group_id),int(user_id)), data=i)
             if ok(r):
+                flash(_.group.admin.ok)
+                return web.redirect('/groups/requests/')
+            else:
+                flash(_.group.admin.fail)
                 return web.redirect('/groups/requests/')
         elif int(is_approved) == 0:
             r, j = client.delete('/groups/%i/requests/%i/' % (int(group_id),int(user_id)), data=i)
             if ok(r):
+                flash(_.group.admin.ok)
+                return web.redirect('/groups/requests/')
+            else:
+                flash(_.group.admin.fail)
                 return web.redirect('/groups/requests/')
         return web.notfound()
 
@@ -611,18 +628,18 @@ class GroupRecommend:
 
     def POST(self, group_id):
         i = web.input()
-        i.content += '<a href="/groups/%i/">#%s#</a><a role="button" class="pull-right btn btn-primary btn-sm" href="/groups/%i/accept/">Join</a>' % (int(i.group_id), i.group_title, int(i.group_id))
+        i.content += '<a href="/groups/%i/">#%s#</a><form method="post" action="/groups/%i/accept/"><button class="pull-left btn btn-primary btn-sm">Join</button></form>' % (int(i.group_id), i.group_title, int(i.group_id))
         i.user_id = session.user.user_id
         r, j = client.post('/notifications/new/', data=i)
         if ok(r):
-            flash(_.notification.recommend.ok)
+            flash(_.notification.invite.ok)
             raise web.redirect('/groups/%i/' % int(i.group_id))
         else:
-            flash(_.notification.recommend.fail)
+            flash(_.notification.invite.fail)
             raise web.redirect('/groups/%i/' % int(i.group_id))
 
 class GroupAccept:
-    def GET(self, group_id):
+    def POST(self, group_id):
         r, g = client.get('/groups/%i/' % int(group_id))
 
         i = {'user_id':session.user.user_id}
@@ -631,7 +648,12 @@ class GroupAccept:
         i = {'user_id':g.creator_id}
         r, j = client.post('/groups/%i/requests/%i/' % (int(group_id),int(session.user.user_id)), data=i)
 
-        raise web.redirect('/groups/%i/' % int(group_id))
+        if ok(r):
+            flash(_.group.join.ok)
+            raise web.redirect('/groups/%i/' % int(group_id))
+        else:
+            flash(_.group.join.fail)
+            raise web.redirect('/notifications/')
 
 if __name__ == "__main__":
     app.run()

@@ -26,6 +26,17 @@ class topic:
     class edit:
         ok = u'修改话题成功'
         fail = u'修改话题失败'
+    class delete:
+        ok = u'删除话题成功'
+        fail = u'删除话题失败'
+
+class comment:
+    class new:
+        ok = u'评论成功'
+        fail = u'评论失败'
+    class delete:
+        ok = u'删除评论成功'
+        fail = u'删除评论失败'
 
 class vip:
     class set:
@@ -41,6 +52,9 @@ class notification:
     class recommend:
         ok = u'推荐话题成功'
         fail = u'推荐话题失败'
+    class invite:
+        ok = u'邀请好友成功'
+        fail = u'邀请好友失败'
     class ad:
         ok = u'发送广告成功'
         fail = u'发送广告失败'
@@ -55,6 +69,9 @@ class group:
     class join:
         ok = u'申请加入提交'
         fail = u'已经申请加入了'
+    class admin:
+        ok = u'操作成功'
+        fail = u'操作失败'
 
 class prefix:
     ad = u'[广告]'
