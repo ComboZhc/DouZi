@@ -644,7 +644,7 @@ class GroupRecommend:
     def GET(self, group_id):
         render = web.template.render('asset', base='after.common', globals=globals())
         r, t = client.get('/groups/%i/' % int(group_id))
-        r, j = client.get('/users/%i/friends/' % int(session.user.user_id))
+        r, j = client.get('/users/')
         if ok(r):
             return render.groups_recommend(users=j,group=t)
         return web.notfound()
