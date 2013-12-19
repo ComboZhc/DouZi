@@ -1,6 +1,7 @@
 #coding: utf-8
 import json
 import re
+import _
 from requests import codes
 from utils import storify
 
@@ -252,7 +253,6 @@ def post(url, data={}, **kwargs):
             users[-1]['notifications'] = []
             return codes.created, users[-1]
         if url == '/topics/':
-            # PUSH TO FRIENDS!!!!
             topics.append({})
             topics[-1]['topic_id'] = len(topics) - 1
             topics[-1]['creator_id'] = int(data['user_id'])
@@ -262,6 +262,13 @@ def post(url, data={}, **kwargs):
             topics[-1]['content'] = data['content']
             topics[-1]['is_public'] = int(data['is_public'])
             topics[-1]['comments'] = []
+            for user in users:
+                if user and int(data['user_id']) in user['friends']:
+                    user['notifications'].append({})
+                    user['notifications'][-1]['user_id'] = int(data['user_id'])
+                    user['notifications'][-1]['creator_id'] = int(data['user_id'])
+                    user['notifications'][-1]['title'] = _.prefix.push
+                    user['notifications'][-1]['content'] = '<a href="/topics/%i/">#%s#</a>' % (topics[-1]['topic_id'], data['title'])
             return codes.created, topics[-1]
         if re.match(r"^/users/(?P<id>\d+)/friends/$", url):
             id = int(re.match(r"^/users/(?P<id>\d+)/friends/$", url).group('id'))
@@ -292,11 +299,12 @@ def post(url, data={}, **kwargs):
                 user['notifications'][-1]['content'] = data['content']
             else:
                 for user in users:
-                    user['notifications'].append({})
-                    user['notifications'][-1]['user_id'] = int(data['user_id'])
-                    user['notifications'][-1]['creator_id'] = int(data['user_id'])
-                    user['notifications'][-1]['title'] = data['title']
-                    user['notifications'][-1]['content'] = data['content']
+                    if user:
+                        user['notifications'].append({})
+                        user['notifications'][-1]['user_id'] = int(data['user_id'])
+                        user['notifications'][-1]['creator_id'] = int(data['user_id'])
+                        user['notifications'][-1]['title'] = data['title']
+                        user['notifications'][-1]['content'] = data['content']
             return codes.created, {}
         if url == '/groups/':
             groups.append({})
