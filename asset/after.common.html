@@ -75,7 +75,14 @@ $def with (content)
             <ul class="nav navbar-nav navbar-right">
               $if session.user:
                 <li><a href="/notifications/">通知</a></li>
-                <p class="navbar-text">欢迎回来, $session.username</p>
+                <p class="navbar-text">欢迎回来, 
+                $if is_admin():
+                  (管理员)
+                $if is_vip():
+                  (VIP)
+                $if is_banned():
+                  (封禁)
+                $session.username</p>
                 <a id="logout-btn" role="button" class="pull-right btn btn-primary btn-sm" href="/logout/">登出</a>
             </ul>
           </div>
